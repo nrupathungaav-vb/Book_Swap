@@ -475,11 +475,11 @@ tests/              unit/ · integration/ · db/ (SQL suite + runner) · e2e/ (P
 - ✅ **Database layer — verified.** All migrations were applied (twice, proving idempotency) to PostgreSQL 16 with the
   Supabase shim, the seed loaded, and the SQL suite passed: 70 assertions + the concurrent-reservation race
   (`npm run test:db`).
-- ⚠️ **Application build, lint, typecheck, Vitest and Playwright — not verified in the build environment.** The
-  environment's network policy blocked the npm registry, so dependencies could not be installed. The code was
-  written against the documented APIs of the pinned major versions and reviewed by hand, but **run
-  `npm install && npm run check` before relying on it**, and fix any version drift it reports. CI
-  (`.github/workflows/ci.yml`) runs all of these on every push.
+- ✅ **Application — lint, typecheck, unit/component tests and production build verified** (Node 22, clean `npm ci`):
+  `npm run lint`, `npm run typecheck`, `npm test` (108 passed; the Supabase integration suite skips without
+  `SUPABASE_TEST_*`) and `npm run build` all pass. CI (`.github/workflows/ci.yml`) runs these on every push.
+- ⚠️ **Playwright E2E — not yet run.** It needs a running Supabase stack (`npx supabase start`) and
+  `SUPABASE_SERVICE_ROLE_KEY`.
 - ⚠️ **Live integrations — not verified.** No Supabase project, Google OAuth client or Gemini key was available, so
   OAuth, Storage uploads, Realtime delivery and Gemini responses have not been exercised against the real services.
 
