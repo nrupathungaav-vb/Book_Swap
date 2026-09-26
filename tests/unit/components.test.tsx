@@ -28,14 +28,20 @@ describe("status badges", () => {
 describe("FormField", () => {
   it("wires label, description and error to the control", () => {
     render(
-      <FormField id="title" label="Title" description="As printed on the cover" error="Title is required." required>
+      <FormField
+        id="title"
+        label="Title"
+        description="As printed on the cover"
+        error="Title is required."
+        required
+      >
         <Input />
       </FormField>,
     );
     const input = screen.getByLabelText(/Title/);
     expect(input).toHaveAttribute("id", "title");
     expect(input).toHaveAttribute("aria-invalid", "true");
-    expect(input).toHaveAttribute("aria-describedby", "title-error");
+    expect(input).toHaveAttribute("aria-describedby", "title-description title-error");
     expect(screen.getByRole("alert")).toHaveTextContent("Title is required.");
   });
 
@@ -67,7 +73,14 @@ describe("PasswordInput", () => {
 describe("EmptyState", () => {
   it("renders title, description and action", () => {
     const onClick = vi.fn();
-    render(<EmptyState icon={BookOpen} title="No books found." description="Try widening your filters." action={<button onClick={onClick}>Reset</button>} />);
+    render(
+      <EmptyState
+        icon={BookOpen}
+        title="No books found."
+        description="Try widening your filters."
+        action={<button onClick={onClick}>Reset</button>}
+      />,
+    );
     expect(screen.getByRole("heading", { name: "No books found." })).toBeInTheDocument();
     expect(screen.getByText("Try widening your filters.")).toBeInTheDocument();
   });
@@ -75,7 +88,11 @@ describe("EmptyState", () => {
 
 describe("BookCover", () => {
   it("falls back to a typographic cover when there is no image", () => {
-    render(<BookCover book={{ title: "Emma", author: "Jane Austen", cover_image_url: null, google_cover_url: null }} />);
+    render(
+      <BookCover
+        book={{ title: "Emma", author: "Jane Austen", cover_image_url: null, google_cover_url: null }}
+      />,
+    );
     expect(screen.getByText("Emma")).toBeInTheDocument();
     expect(screen.getByText("Jane Austen")).toBeInTheDocument();
     expect(screen.queryByRole("img")).not.toBeInTheDocument();

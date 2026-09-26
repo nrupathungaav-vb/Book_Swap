@@ -52,7 +52,7 @@ export type DiscoverSort = "newest" | "title" | "author" | "distance" | "conditi
 
 type Timestamp = string;
 
-export interface ProfileRow {
+export type ProfileRow = {
   id: string;
   email: string | null;
   full_name: string | null;
@@ -64,18 +64,18 @@ export interface ProfileRow {
   role: UserRole;
   created_at: Timestamp;
   updated_at: Timestamp;
-}
+};
 
-export interface PublicProfileRow {
+export type PublicProfileRow = {
   id: string;
   full_name: string | null;
   avatar_url: string | null;
   bio: string | null;
   location_city: string | null;
   created_at: Timestamp;
-}
+};
 
-export interface BookRow {
+export type BookRow = {
   id: string;
   user_id: string;
   title: string;
@@ -94,9 +94,9 @@ export interface BookRow {
   author_norm: string;
   created_at: Timestamp;
   updated_at: Timestamp;
-}
+};
 
-export interface WishlistRow {
+export type WishlistRow = {
   id: string;
   user_id: string;
   title: string;
@@ -104,9 +104,9 @@ export interface WishlistRow {
   title_norm: string;
   author_norm: string;
   created_at: Timestamp;
-}
+};
 
-export interface SwapRequestRow {
+export type SwapRequestRow = {
   id: string;
   requester_id: string;
   responder_id: string;
@@ -120,17 +120,17 @@ export interface SwapRequestRow {
   completed_at: Timestamp | null;
   created_at: Timestamp;
   updated_at: Timestamp;
-}
+};
 
-export interface MessageRow {
+export type MessageRow = {
   id: string;
   swap_request_id: string;
   sender_id: string;
   text: string;
   created_at: Timestamp;
-}
+};
 
-export interface MeetingLocationRow {
+export type MeetingLocationRow = {
   id: string;
   swap_request_id: string;
   suggested_by_user_id: string;
@@ -141,9 +141,9 @@ export interface MeetingLocationRow {
   suggested_time: Timestamp | null;
   responded_at: Timestamp | null;
   created_at: Timestamp;
-}
+};
 
-export interface NotificationRow {
+export type NotificationRow = {
   id: string;
   user_id: string;
   type: NotificationType;
@@ -153,9 +153,9 @@ export interface NotificationRow {
   related_book_id: string | null;
   is_read: boolean;
   created_at: Timestamp;
-}
+};
 
-export interface ReportRow {
+export type ReportRow = {
   id: string;
   reporter_id: string;
   reported_user_id: string | null;
@@ -167,26 +167,26 @@ export interface ReportRow {
   resolved_by: string | null;
   created_at: Timestamp;
   resolved_at: Timestamp | null;
-}
+};
 
-export interface MatchRow {
+export type MatchRow = {
   id: string;
   user_a_id: string;
   user_b_id: string;
   book_a_id: string;
   book_b_id: string;
   created_at: Timestamp;
-}
+};
 
-export interface AiUsageRow {
+export type AiUsageRow = {
   id: number;
   user_id: string;
   kind: "insights" | "question";
   created_at: Timestamp;
-}
+};
 
 /** Row returned by public.get_my_matches(). */
-export interface MatchResultRow {
+export type MatchResultRow = {
   match_id: string;
   other_user_id: string;
   other_user_name: string;
@@ -207,10 +207,10 @@ export interface MatchResultRow {
   match_status: MatchStatus;
   active_swap_id: string | null;
   created_at: Timestamp;
-}
+};
 
 /** Row returned by public.discover_books(). */
-export interface DiscoverBookRow {
+export type DiscoverBookRow = {
   id: string;
   user_id: string;
   title: string;
@@ -229,9 +229,9 @@ export interface DiscoverBookRow {
   in_wishlist: boolean;
   is_mutual_match: boolean;
   total_count: number;
-}
+};
 
-export interface AdminUserRow {
+export type AdminUserRow = {
   id: string;
   email: string | null;
   full_name: string | null;
@@ -242,7 +242,7 @@ export interface AdminUserRow {
   books_count: number;
   reports_against: number;
   completed_swaps: number;
-}
+};
 
 type Rel = {
   foreignKeyName: string;
@@ -254,13 +254,27 @@ type Rel = {
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       profiles: {
         Row: ProfileRow;
-        Insert: Optional<ProfileRow, "email" | "full_name" | "avatar_url" | "bio" | "location_city" | "geo_lat" | "geo_lng" | "role" | "created_at" | "updated_at">;
-        Update: Partial<Pick<ProfileRow, "full_name" | "avatar_url" | "bio" | "location_city" | "geo_lat" | "geo_lng">>;
+        Insert: Optional<
+          ProfileRow,
+          | "email"
+          | "full_name"
+          | "avatar_url"
+          | "bio"
+          | "location_city"
+          | "geo_lat"
+          | "geo_lng"
+          | "role"
+          | "created_at"
+          | "updated_at"
+        >;
+        Update: Partial<
+          Pick<ProfileRow, "full_name" | "avatar_url" | "bio" | "location_city" | "geo_lat" | "geo_lng">
+        >;
         Relationships: [];
       };
       books: {
@@ -295,8 +309,20 @@ export interface Database {
           >
         >;
         Relationships: [
-          { foreignKeyName: "books_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "profiles"; referencedColumns: ["id"] },
-          { foreignKeyName: "books_user_id_fkey"; columns: ["user_id"]; isOneToOne: false; referencedRelation: "public_profiles"; referencedColumns: ["id"] },
+          {
+            foreignKeyName: "books_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "books_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "public_profiles";
+            referencedColumns: ["id"];
+          },
         ];
       };
       wishlists: {
@@ -310,8 +336,20 @@ export interface Database {
         Insert: never;
         Update: never;
         Relationships: [
-          { foreignKeyName: "swap_requests_requested_book_id_fkey"; columns: ["requested_book_id"]; isOneToOne: false; referencedRelation: "books"; referencedColumns: ["id"] },
-          { foreignKeyName: "swap_requests_offered_book_id_fkey"; columns: ["offered_book_id"]; isOneToOne: false; referencedRelation: "books"; referencedColumns: ["id"] },
+          {
+            foreignKeyName: "swap_requests_requested_book_id_fkey";
+            columns: ["requested_book_id"];
+            isOneToOne: false;
+            referencedRelation: "books";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "swap_requests_offered_book_id_fkey";
+            columns: ["offered_book_id"];
+            isOneToOne: false;
+            referencedRelation: "books";
+            referencedColumns: ["id"];
+          },
         ];
       };
       messages: {
@@ -350,7 +388,13 @@ export interface Database {
         };
         Update: never;
         Relationships: [
-          { foreignKeyName: "reports_reported_book_id_fkey"; columns: ["reported_book_id"]; isOneToOne: false; referencedRelation: "books"; referencedColumns: ["id"] },
+          {
+            foreignKeyName: "reports_reported_book_id_fkey";
+            columns: ["reported_book_id"];
+            isOneToOne: false;
+            referencedRelation: "books";
+            referencedColumns: ["id"];
+          },
         ];
       };
       matches: {
@@ -412,6 +456,6 @@ export interface Database {
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };
-}
+};
 
 export type { Rel as DatabaseRelationship };
