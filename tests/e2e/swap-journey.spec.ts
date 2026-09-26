@@ -37,7 +37,10 @@ async function listBook(page: Page, title: string, author: string, withPhoto: bo
   await page.getByLabel("Author", { exact: true }).fill(author);
   await page.getByLabel("Genre").fill("Fiction");
   if (withPhoto) {
-    await page.locator('input[type="file"]').first().setInputFiles({ name: "copy.png", mimeType: "image/png", buffer: PNG });
+    await page
+      .locator('input[type="file"]')
+      .first()
+      .setInputFiles({ name: "copy.png", mimeType: "image/png", buffer: PNG });
     await expect(page.getByAltText("Preview of your book photo")).toBeVisible();
   }
   await page.getByRole("button", { name: "Publish listing" }).click();
@@ -95,7 +98,10 @@ test("full two-user swap journey", async ({ browser }) => {
   await bob.getByLabel("Place name").fill("City Library entrance");
   await bob.getByRole("button", { name: /Suggest to/ }).click();
   await expect(alice.getByText("City Library entrance")).toBeVisible();
-  await alice.getByRole("list", { name: "Meeting suggestions" }).getByRole("button", { name: "Accept" }).click();
+  await alice
+    .getByRole("list", { name: "Meeting suggestions" })
+    .getByRole("button", { name: "Accept" })
+    .click();
   await expect(alice.getByText("Agreed")).toBeVisible();
 
   // ---- Complete: both confirm

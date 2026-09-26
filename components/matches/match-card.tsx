@@ -11,8 +11,8 @@ import type { Match } from "@/types";
 export function MatchCard({ match }: { match: Match }) {
   const distance = formatDistance(match.distance_km);
   return (
-    <article className="overflow-hidden rounded-2xl border bg-card shadow-sm">
-      <header className="flex items-center gap-3 border-b bg-secondary/40 px-4 py-3">
+    <article className="bg-card overflow-hidden rounded-2xl border shadow-sm">
+      <header className="bg-secondary/40 flex items-center gap-3 border-b px-4 py-3">
         <Avatar>
           {match.other_user_avatar && <AvatarImage src={match.other_user_avatar} alt="" />}
           <AvatarFallback>{initials(match.other_user_name)}</AvatarFallback>
@@ -20,7 +20,7 @@ export function MatchCard({ match }: { match: Match }) {
         <div className="min-w-0 flex-1">
           <p className="truncate font-medium">{match.other_user_name}</p>
           {(match.other_user_city || distance) && (
-            <p className="flex items-center gap-1 truncate text-xs text-muted-foreground">
+            <p className="text-muted-foreground flex items-center gap-1 truncate text-xs">
               <MapPin className="size-3" aria-hidden />
               {[match.other_user_city, distance].filter(Boolean).join(" · ")}
             </p>
@@ -30,18 +30,28 @@ export function MatchCard({ match }: { match: Match }) {
       </header>
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 p-4">
         <Link href={`/books/${match.my_book_id}`} className="group space-y-1.5">
-          <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">You give</p>
+          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">You give</p>
           <BookCover
-            book={{ title: match.my_book_title, author: match.my_book_author, cover_image_url: match.my_book_cover, google_cover_url: null }}
+            book={{
+              title: match.my_book_title,
+              author: match.my_book_author,
+              cover_image_url: match.my_book_cover,
+              google_cover_url: null,
+            }}
             sizes="160px"
           />
           <p className="line-clamp-2 text-sm font-medium group-hover:underline">{match.my_book_title}</p>
         </Link>
-        <ArrowLeftRight className="size-6 text-amber" aria-label="in exchange for" />
+        <ArrowLeftRight className="text-amber size-6" aria-label="in exchange for" />
         <Link href={`/books/${match.their_book_id}`} className="group space-y-1.5">
-          <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">You get</p>
+          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">You get</p>
           <BookCover
-            book={{ title: match.their_book_title, author: match.their_book_author, cover_image_url: match.their_book_cover, google_cover_url: null }}
+            book={{
+              title: match.their_book_title,
+              author: match.their_book_author,
+              cover_image_url: match.their_book_cover,
+              google_cover_url: null,
+            }}
             sizes="160px"
           />
           <p className="line-clamp-2 text-sm font-medium group-hover:underline">{match.their_book_title}</p>

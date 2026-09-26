@@ -18,8 +18,16 @@ export default async function WishlistPage() {
 
   return (
     <div>
-      <PageHeader eyebrow="Wishlist" title="Books you're hunting for" description="Your wishlist is private. It powers mutual matching behind the scenes." />
-      {error ? <ErrorState message="Your wishlist couldn't be loaded." /> : <WishlistManager initialItems={data ?? []} />}
+      <PageHeader
+        eyebrow="Wishlist"
+        title="Books you're hunting for"
+        description="Your wishlist is private. It powers mutual matching behind the scenes."
+      />
+      {error ? (
+        <ErrorState message="Your wishlist couldn't be loaded." />
+      ) : (
+        <WishlistManager initialItems={data ?? []} />
+      )}
     </div>
   );
 }

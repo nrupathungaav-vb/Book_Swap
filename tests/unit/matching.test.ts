@@ -9,14 +9,24 @@ import {
   type MatchableWish,
 } from "@/lib/matching";
 
-const book = (id: string, ownerId: string, title: string, author: string, status: MatchableBook["status"] = "Available"): MatchableBook => ({
+const book = (
+  id: string,
+  ownerId: string,
+  title: string,
+  author: string,
+  status: MatchableBook["status"] = "Available",
+): MatchableBook => ({
   id,
   ownerId,
   title,
   author,
   status,
 });
-const wish = (userId: string, title: string, author: string | null = null): MatchableWish => ({ userId, title, author });
+const wish = (userId: string, title: string, author: string | null = null): MatchableWish => ({
+  userId,
+  title,
+  author,
+});
 
 describe("normalizeText", () => {
   it("ignores case, punctuation and spacing", () => {
@@ -49,7 +59,10 @@ describe("findMutualMatches", () => {
   ];
 
   it("finds A ↔ B when each wants the other's book", () => {
-    const matches = findMutualMatches(books, [wish("alice", "The Hobbit"), wish("bob", "Pride and Prejudice", "Jane Austen")]);
+    const matches = findMutualMatches(books, [
+      wish("alice", "The Hobbit"),
+      wish("bob", "Pride and Prejudice", "Jane Austen"),
+    ]);
     expect(matches).toEqual([{ userA: "alice", userB: "bob", bookA: "pnp", bookB: "hobbit" }]);
   });
 
@@ -63,19 +76,32 @@ describe("findMutualMatches", () => {
 
   it("excludes hidden and swapped books", () => {
     const withHidden = books.map((b) => (b.id === "hobbit" ? { ...b, status: "Hidden" as const } : b));
-    expect(findMutualMatches(withHidden, [wish("alice", "The Hobbit"), wish("bob", "Pride and Prejudice")])).toEqual([]);
+    expect(
+      findMutualMatches(withHidden, [wish("alice", "The Hobbit"), wish("bob", "Pride and Prejudice")]),
+    ).toEqual([]);
     const withSwapped = books.map((b) => (b.id === "pnp" ? { ...b, status: "Swapped" as const } : b));
-    expect(findMutualMatches(withSwapped, [wish("alice", "The Hobbit"), wish("bob", "Pride and Prejudice")])).toEqual([]);
+    expect(
+      findMutualMatches(withSwapped, [wish("alice", "The Hobbit"), wish("bob", "Pride and Prejudice")]),
+    ).toEqual([]);
   });
 
   it("keeps reserved books (they may come back) and de-duplicates", () => {
     const reserved = books.map((b) => (b.id === "hobbit" ? { ...b, status: "Reserved" as const } : b));
-    const wishes = [wish("alice", "The Hobbit"), wish("alice", "the hobbit", "J.R.R. Tolkien"), wish("bob", "Pride and Prejudice")];
+    const wishes = [
+      wish("alice", "The Hobbit"),
+      wish("alice", "the hobbit", "J.R.R. Tolkien"),
+      wish("bob", "Pride and Prejudice"),
+    ];
     expect(findMutualMatches(reserved, wishes)).toHaveLength(1);
   });
 
   it("finds multiple independent pairs", () => {
-    const wishes = [wish("alice", "The Hobbit"), wish("bob", "Pride and Prejudice"), wish("carol", "Dune"), wish("bob", "Thinking, Fast and Slow")];
+    const wishes = [
+      wish("alice", "The Hobbit"),
+      wish("bob", "Pride and Prejudice"),
+      wish("carol", "Dune"),
+      wish("bob", "Thinking, Fast and Slow"),
+    ];
     const matches = findMutualMatches(books, wishes);
     expect(matches).toHaveLength(2);
     expect(matches).toContainEqual({ userA: "bob", userB: "carol", bookA: "dune", bookB: "thinking" });

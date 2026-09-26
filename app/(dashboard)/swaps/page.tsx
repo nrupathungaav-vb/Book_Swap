@@ -13,15 +13,27 @@ import type { SwapDetails } from "@/types";
 
 export const metadata: Metadata = { title: "Swaps" };
 
-function Section({ id, title, swaps, userId, empty }: { id: string; title: string; swaps: SwapDetails[]; userId: string; empty?: string }) {
+function Section({
+  id,
+  title,
+  swaps,
+  userId,
+  empty,
+}: {
+  id: string;
+  title: string;
+  swaps: SwapDetails[];
+  userId: string;
+  empty?: string;
+}) {
   if (swaps.length === 0 && !empty) return null;
   return (
     <section aria-labelledby={id} className="space-y-3">
       <h2 id={id} className="text-xl font-semibold">
-        {title} <span className="text-base font-normal text-muted-foreground">({swaps.length})</span>
+        {title} <span className="text-muted-foreground text-base font-normal">({swaps.length})</span>
       </h2>
       {swaps.length === 0 ? (
-        <p className="rounded-xl border border-dashed p-5 text-sm text-muted-foreground">{empty}</p>
+        <p className="text-muted-foreground rounded-xl border border-dashed p-5 text-sm">{empty}</p>
       ) : (
         <div className="space-y-3">
           {swaps.map((swap) => (
@@ -60,7 +72,11 @@ export default async function SwapsPage() {
 
   return (
     <div className="space-y-10">
-      <PageHeader eyebrow="Swaps" title="Your swaps" description="Reply to requests, coordinate active swaps, and look back at past exchanges." />
+      <PageHeader
+        eyebrow="Swaps"
+        title="Your swaps"
+        description="Reply to requests, coordinate active swaps, and look back at past exchanges."
+      />
       {swaps.length === 0 ? (
         <EmptyState
           icon={ArrowLeftRight}
@@ -74,8 +90,20 @@ export default async function SwapsPage() {
         />
       ) : (
         <>
-          <Section id="incoming" title="Waiting for your reply" swaps={incoming} userId={user.id} empty="No requests waiting for you." />
-          <Section id="active" title="Active swaps" swaps={active} userId={user.id} empty="No active swaps." />
+          <Section
+            id="incoming"
+            title="Waiting for your reply"
+            swaps={incoming}
+            userId={user.id}
+            empty="No requests waiting for you."
+          />
+          <Section
+            id="active"
+            title="Active swaps"
+            swaps={active}
+            userId={user.id}
+            empty="No active swaps."
+          />
           <Section id="sent" title="Requests you sent" swaps={sent} userId={user.id} />
           <Section id="history" title="History" swaps={history} userId={user.id} />
         </>

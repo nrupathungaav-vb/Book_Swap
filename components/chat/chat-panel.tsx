@@ -63,7 +63,10 @@ export function ChatPanel({
   let lastDay = "";
 
   return (
-    <section aria-labelledby="chat-heading" className="flex h-full min-h-[28rem] flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
+    <section
+      aria-labelledby="chat-heading"
+      className="bg-card flex h-full min-h-[28rem] flex-col overflow-hidden rounded-2xl border shadow-sm"
+    >
       <header className="flex items-center gap-3 border-b px-4 py-3">
         <Avatar className="size-8">
           {other.avatar_url && <AvatarImage src={other.avatar_url} alt="" />}
@@ -73,10 +76,10 @@ export function ChatPanel({
           <h2 id="chat-heading" className="truncate font-sans text-sm font-semibold">
             Chat with {other.full_name ?? "a reader"}
           </h2>
-          <p className="flex items-center gap-1 text-xs text-muted-foreground" aria-live="polite">
+          <p className="text-muted-foreground flex items-center gap-1 text-xs" aria-live="polite">
             {connection === "live" ? (
               <>
-                <Wifi className="size-3 text-forest" aria-hidden /> Live
+                <Wifi className="text-forest size-3" aria-hidden /> Live
               </>
             ) : connection === "connecting" ? (
               <>
@@ -84,22 +87,29 @@ export function ChatPanel({
               </>
             ) : (
               <>
-                <WifiOff className="size-3 text-destructive" aria-hidden /> Offline — new messages will appear when you reconnect
+                <WifiOff className="text-destructive size-3" aria-hidden /> Offline — new messages will appear
+                when you reconnect
               </>
             )}
           </p>
         </div>
       </header>
 
-      <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto px-4 py-4" role="log" aria-live="polite" aria-label="Messages">
+      <div
+        ref={scrollRef}
+        className="flex-1 space-y-2 overflow-y-auto px-4 py-4"
+        role="log"
+        aria-live="polite"
+        aria-label="Messages"
+      >
         {loadError && (
-          <p className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+          <p className="bg-destructive/10 text-destructive flex items-center gap-2 rounded-lg p-3 text-sm">
             <AlertCircle className="size-4" aria-hidden /> Unable to load messages. Refresh to try again.
           </p>
         )}
         {!loadError && messages.length === 0 && (
-          <div className="flex h-full flex-col items-center justify-center gap-2 py-10 text-center text-sm text-muted-foreground">
-            <MessageCircle className="size-8 text-primary/60" aria-hidden />
+          <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-2 py-10 text-center text-sm">
+            <MessageCircle className="text-primary/60 size-8" aria-hidden />
             <p>No messages yet. Say hello and suggest when you&apos;re free!</p>
           </div>
         )}
@@ -110,20 +120,29 @@ export function ChatPanel({
           lastDay = day;
           return (
             <div key={message.id}>
-              {showDay && <p className="my-3 text-center text-xs font-medium text-muted-foreground">{day}</p>}
+              {showDay && <p className="text-muted-foreground my-3 text-center text-xs font-medium">{day}</p>}
               <div className={cn("flex", mine ? "justify-end" : "justify-start")}>
                 <div
                   className={cn(
                     "max-w-[80%] rounded-2xl px-3.5 py-2 text-sm shadow-xs",
-                    mine ? "rounded-br-sm bg-primary text-primary-foreground" : "rounded-bl-sm bg-muted",
+                    mine ? "bg-primary text-primary-foreground rounded-br-sm" : "bg-muted rounded-bl-sm",
                     message.pending && "opacity-70",
-                    message.failed && "border border-destructive bg-destructive/10 text-foreground",
+                    message.failed && "border-destructive bg-destructive/10 text-foreground border",
                   )}
                 >
-                  <span className="sr-only">{mine ? "You" : other.full_name ?? "They"} said: </span>
+                  <span className="sr-only">{mine ? "You" : (other.full_name ?? "They")} said: </span>
                   <p className="break-words whitespace-pre-wrap">{message.text}</p>
-                  <p className={cn("mt-0.5 text-right text-[10px]", mine ? "text-primary-foreground/75" : "text-muted-foreground")}>
-                    {message.failed ? "Not sent" : message.pending ? "Sending…" : formatTime(message.created_at)}
+                  <p
+                    className={cn(
+                      "mt-0.5 text-right text-[10px]",
+                      mine ? "text-primary-foreground/75" : "text-muted-foreground",
+                    )}
+                  >
+                    {message.failed
+                      ? "Not sent"
+                      : message.pending
+                        ? "Sending…"
+                        : formatTime(message.created_at)}
                   </p>
                 </div>
               </div>
@@ -170,7 +189,9 @@ export function ChatPanel({
           </Button>
         </form>
       ) : (
-        <p className="border-t p-3 text-center text-sm text-muted-foreground">This swap is closed, so the chat is read-only.</p>
+        <p className="text-muted-foreground border-t p-3 text-center text-sm">
+          This swap is closed, so the chat is read-only.
+        </p>
       )}
     </section>
   );

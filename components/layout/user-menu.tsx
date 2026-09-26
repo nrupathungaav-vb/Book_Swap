@@ -39,7 +39,7 @@ export function UserMenu({
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="space-y-0.5">
           <p className="truncate">{name ?? "Reader"}</p>
-          {email && <p className="truncate text-xs font-normal text-muted-foreground">{email}</p>}
+          {email && <p className="text-muted-foreground truncate text-xs font-normal">{email}</p>}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

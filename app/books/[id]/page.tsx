@@ -27,7 +27,11 @@ async function loadBook(id: string) {
   // RLS decides visibility: live listings for everyone, hidden/swapped only for owner/participants/admins.
   const { data: book } = await supabase.from("books").select("*").eq("id", id).maybeSingle();
   if (!book) return null;
-  const { data: owner } = await supabase.from("public_profiles").select("*").eq("id", book.user_id).maybeSingle();
+  const { data: owner } = await supabase
+    .from("public_profiles")
+    .select("*")
+    .eq("id", book.user_id)
+    .maybeSingle();
   return { supabase, book, owner };
 }
 
@@ -55,7 +59,11 @@ export default async function BookDetailsPage({ params }: Props) {
   if (user && !isOwner) {
     const [dist, wish, match] = await Promise.all([
       supabase.rpc("approx_distance_km", { p_other_user_id: book.user_id }),
-      supabase.from("wishlists").select("author_norm").eq("user_id", user.id).eq("title_norm", book.title_norm),
+      supabase
+        .from("wishlists")
+        .select("author_norm")
+        .eq("user_id", user.id)
+        .eq("title_norm", book.title_norm),
       supabase.from("matches").select("id").or(`book_a_id.eq.${book.id},book_b_id.eq.${book.id}`).limit(1),
     ]);
     distance = dist.data ?? null;
@@ -66,10 +74,16 @@ export default async function BookDetailsPage({ params }: Props) {
   return (
     <article className="grid gap-8 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
       <FadeIn>
-        <BookCover book={book} priority sizes="(min-width: 768px) 40vw, 100vw" className="rounded-2xl border shadow-md" />
+        <BookCover
+          book={book}
+          priority
+          sizes="(min-width: 768px) 40vw, 100vw"
+          className="rounded-2xl border shadow-md"
+        />
         {book.cover_image_url && (
-          <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-            <ShieldCheck className="size-3.5 text-forest" aria-hidden /> Photo of the actual copy, taken by its owner.
+          <p className="text-muted-foreground mt-2 flex items-center gap-1.5 text-xs">
+            <ShieldCheck className="text-forest size-3.5" aria-hidden /> Photo of the actual copy, taken by
+            its owner.
           </p>
         )}
       </FadeIn>
@@ -87,17 +101,21 @@ export default async function BookDetailsPage({ params }: Props) {
             )}
           </div>
           <h1 className="text-3xl leading-tight font-semibold sm:text-4xl">{book.title}</h1>
-          <p className="text-lg text-muted-foreground">by {book.author}</p>
+          <p className="text-muted-foreground text-lg">by {book.author}</p>
         </div>
 
         {isOwner ? (
-          <div className="space-y-3 rounded-xl border bg-secondary/40 p-4">
+          <div className="bg-secondary/40 space-y-3 rounded-xl border p-4">
             <p className="text-sm font-medium">This is your listing.</p>
             <OwnerBookActions bookId={book.id} status={book.status} hiddenByAdmin={book.hidden_by_admin} />
           </div>
         ) : (
           <div className="flex flex-wrap gap-2">
-            <RequestSwapButton book={{ id: book.id, title: book.title, author: book.author }} disabled={book.status !== "Available"} size="lg" />
+            <RequestSwapButton
+              book={{ id: book.id, title: book.title, author: book.author }}
+              disabled={book.status !== "Available"}
+              size="lg"
+            />
             <AiInsightsButton book={{ id: book.id, title: book.title, author: book.author }} />
             {user ? (
               <WishlistButton bookId={book.id} initialInWishlist={inWishlist} withLabel />
@@ -112,7 +130,10 @@ export default async function BookDetailsPage({ params }: Props) {
         {book.status === "Reserved" && !isOwner && (
           <Alert variant="info">
             <Info aria-hidden />
-            <AlertDescription>This copy is reserved in another swap right now. Add it to your wishlist to be matched with other copies.</AlertDescription>
+            <AlertDescription>
+              This copy is reserved in another swap right now. Add it to your wishlist to be matched with
+              other copies.
+            </AlertDescription>
           </Alert>
         )}
 
@@ -121,12 +142,15 @@ export default async function BookDetailsPage({ params }: Props) {
             <h2 id="about-heading" className="mb-2 text-xl font-semibold">
               About this copy
             </h2>
-            <p className="leading-relaxed whitespace-pre-line text-muted-foreground">{book.description}</p>
+            <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{book.description}</p>
           </section>
         )}
 
         {owner && (
-          <section aria-labelledby="owner-heading" className="flex items-center gap-3 rounded-xl border bg-card p-4">
+          <section
+            aria-labelledby="owner-heading"
+            className="bg-card flex items-center gap-3 rounded-xl border p-4"
+          >
             <h2 id="owner-heading" className="sr-only">
               Listed by
             </h2>
@@ -136,7 +160,7 @@ export default async function BookDetailsPage({ params }: Props) {
             </Avatar>
             <div className="min-w-0 flex-1 text-sm">
               <p className="font-medium">{owner.full_name ?? "A reader"}</p>
-              <p className="flex flex-wrap items-center gap-x-3 text-muted-foreground">
+              <p className="text-muted-foreground flex flex-wrap items-center gap-x-3">
                 {(owner.location_city || distance) && (
                   <span className="flex items-center gap-1">
                     <MapPin className="size-3.5" aria-hidden />
@@ -144,7 +168,8 @@ export default async function BookDetailsPage({ params }: Props) {
                   </span>
                 )}
                 <span className="flex items-center gap-1">
-                  <CalendarDays className="size-3.5" aria-hidden /> Member since {new Date(owner.created_at).getFullYear()}
+                  <CalendarDays className="size-3.5" aria-hidden /> Member since{" "}
+                  {new Date(owner.created_at).getFullYear()}
                 </span>
               </p>
             </div>
@@ -172,7 +197,11 @@ export default async function BookDetailsPage({ params }: Props) {
         <div className="flex flex-wrap items-center gap-2 border-t pt-4">
           {book.google_books_id && (
             <Button asChild variant="link" className="px-0">
-              <a href={`https://books.google.com/books?id=${encodeURIComponent(book.google_books_id)}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`https://books.google.com/books?id=${encodeURIComponent(book.google_books_id)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 View on Google Books <ExternalLink aria-hidden />
               </a>
             </Button>

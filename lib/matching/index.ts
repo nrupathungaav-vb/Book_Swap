@@ -49,7 +49,11 @@ export interface MutualMatch {
 export function findMutualMatches(books: MatchableBook[], wishes: MatchableWish[]): MutualMatch[] {
   const liveBooks = books.filter((book) => LIVE.has(book.status));
   const wantedBy = (book: MatchableBook) =>
-    new Set(wishes.filter((wish) => wish.userId !== book.ownerId && wishMatchesBook(wish, book)).map((w) => w.userId));
+    new Set(
+      wishes
+        .filter((wish) => wish.userId !== book.ownerId && wishMatchesBook(wish, book))
+        .map((w) => w.userId),
+    );
 
   const results = new Map<string, MutualMatch>();
   for (const x of liveBooks) {
@@ -59,7 +63,8 @@ export function findMutualMatches(books: MatchableBook[], wishes: MatchableWish[
       if (!wantedBy(y).has(x.ownerId)) continue;
       const [a, b] = x.ownerId < y.ownerId ? [x, y] : [y, x];
       const key = `${a.id}:${b.id}`;
-      if (!results.has(key)) results.set(key, { userA: a.ownerId, userB: b.ownerId, bookA: a.id, bookB: b.id });
+      if (!results.has(key))
+        results.set(key, { userA: a.ownerId, userB: b.ownerId, bookA: a.id, bookB: b.id });
     }
   }
   return [...results.values()];

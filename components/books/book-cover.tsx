@@ -2,7 +2,12 @@ import Image from "next/image";
 import { BookOpen } from "lucide-react";
 import { bookImageUrl, cn } from "@/lib/utils";
 
-const OPTIMIZABLE_HOSTS = [/\.supabase\.co$/, /^books\.google\.com$/, /^books\.googleusercontent\.com$/, /^lh3\.googleusercontent\.com$/];
+const OPTIMIZABLE_HOSTS = [
+  /\.supabase\.co$/,
+  /^books\.google\.com$/,
+  /^books\.googleusercontent\.com$/,
+  /^lh3\.googleusercontent\.com$/,
+];
 
 function canOptimize(url: string): boolean {
   try {
@@ -32,7 +37,7 @@ export function BookCover({
   const isPhoto = Boolean(book.cover_image_url);
 
   return (
-    <div className={cn("relative aspect-[3/4] w-full overflow-hidden rounded-lg bg-secondary", className)}>
+    <div className={cn("bg-secondary relative aspect-[3/4] w-full overflow-hidden rounded-lg", className)}>
       {url ? (
         <Image
           src={url}
@@ -44,7 +49,7 @@ export function BookCover({
           className={cn("object-cover", !isPhoto && "object-contain p-3")}
         />
       ) : (
-        <div className="paper flex h-full flex-col justify-between bg-gradient-to-br from-primary/85 to-primary p-4 text-primary-foreground">
+        <div className="paper from-primary/85 to-primary text-primary-foreground flex h-full flex-col justify-between bg-gradient-to-br p-4">
           <BookOpen className="size-5 opacity-70" aria-hidden />
           <div>
             <p className="line-clamp-3 font-serif text-lg leading-tight font-semibold">{book.title}</p>

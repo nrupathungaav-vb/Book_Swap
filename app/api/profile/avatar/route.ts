@@ -38,7 +38,8 @@ export async function POST(request: Request) {
       return jsonError("Avatar upload failed.", 500);
     }
     const previous = storagePathFromPublicUrl(profile?.avatar_url, AVATARS_BUCKET);
-    if (previous && previous.startsWith(`${user.id}/`)) await supabase.storage.from(AVATARS_BUCKET).remove([previous]);
+    if (previous && previous.startsWith(`${user.id}/`))
+      await supabase.storage.from(AVATARS_BUCKET).remove([previous]);
 
     revalidatePath("/", "layout");
     return NextResponse.json({ url: publicUrl }, { status: 201 });

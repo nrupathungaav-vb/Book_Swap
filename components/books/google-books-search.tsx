@@ -69,10 +69,14 @@ export function GoogleBooksSearch({ onSelect }: { onSelect: (book: GoogleBook) =
   return (
     <div ref={containerRef} className="relative">
       <label htmlFor={`${listId}-input`} className="mb-2 block text-sm font-medium">
-        Find it on Google Books <span className="font-normal text-muted-foreground">(title, author or ISBN)</span>
+        Find it on Google Books{" "}
+        <span className="text-muted-foreground font-normal">(title, author or ISBN)</span>
       </label>
       <div className="relative">
-        <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+        <Search
+          className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
+          aria-hidden
+        />
         <Input
           id={`${listId}-input`}
           role="combobox"
@@ -103,10 +107,13 @@ export function GoogleBooksSearch({ onSelect }: { onSelect: (book: GoogleBook) =
           }}
         />
         {state.status === "loading" && (
-          <Loader2 className="absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin text-muted-foreground" aria-label="Searching" />
+          <Loader2
+            className="text-muted-foreground absolute top-1/2 right-3 size-4 -translate-y-1/2 animate-spin"
+            aria-label="Searching"
+          />
         )}
       </div>
-      <p className="mt-1.5 text-xs text-muted-foreground" aria-live="polite">
+      <p className="text-muted-foreground mt-1.5 text-xs" aria-live="polite">
         {state.status === "error"
           ? state.message
           : state.status === "done" && results.length === 0
@@ -118,7 +125,7 @@ export function GoogleBooksSearch({ onSelect }: { onSelect: (book: GoogleBook) =
         <ul
           id={listId}
           role="listbox"
-          className="absolute z-30 mt-1 max-h-80 w-full overflow-y-auto rounded-lg border bg-popover p-1 shadow-lg"
+          className="bg-popover absolute z-30 mt-1 max-h-80 w-full overflow-y-auto rounded-lg border p-1 shadow-lg"
         >
           {results.map((book, index) => (
             <li
@@ -133,16 +140,16 @@ export function GoogleBooksSearch({ onSelect }: { onSelect: (book: GoogleBook) =
               onMouseEnter={() => setActive(index)}
               className={cn("flex cursor-pointer gap-3 rounded-md p-2", index === active && "bg-accent")}
             >
-              <div className="relative h-16 w-11 shrink-0 overflow-hidden rounded bg-muted">
+              <div className="bg-muted relative h-16 w-11 shrink-0 overflow-hidden rounded">
                 {book.thumbnailUrl ? (
                   <Image src={book.thumbnailUrl} alt="" fill sizes="44px" className="object-cover" />
                 ) : (
-                  <BookOpen className="m-auto mt-5 size-5 text-muted-foreground" aria-hidden />
+                  <BookOpen className="text-muted-foreground m-auto mt-5 size-5" aria-hidden />
                 )}
               </div>
               <div className="min-w-0 text-sm">
                 <p className="line-clamp-2 font-medium">{book.title}</p>
-                <p className="truncate text-muted-foreground">
+                <p className="text-muted-foreground truncate">
                   {book.authors.join(", ") || "Unknown author"}
                   {book.publishedDate ? ` · ${book.publishedDate.slice(0, 4)}` : ""}
                 </p>

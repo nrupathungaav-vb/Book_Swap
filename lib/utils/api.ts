@@ -3,7 +3,10 @@ import { NextResponse } from "next/server";
 import { MissingEnvError } from "@/lib/env";
 
 export function jsonError(message: string, status: number, extra?: Record<string, unknown>) {
-  return NextResponse.json({ error: message, ...extra }, { status, headers: { "Cache-Control": "no-store" } });
+  return NextResponse.json(
+    { error: message, ...extra },
+    { status, headers: { "Cache-Control": "no-store" } },
+  );
 }
 
 /** Maps thrown errors to safe JSON responses (never leaks internals or secrets). */

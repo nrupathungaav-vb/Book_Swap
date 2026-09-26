@@ -2,7 +2,10 @@ import { CheckCircle2, CircleDot, EyeOff, Lock, Repeat2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { BookCondition, BookStatus, MatchStatus, SwapStatus } from "@/types";
 
-const BOOK_STATUS: Record<BookStatus, { variant: "forest" | "amber" | "muted" | "secondary"; icon: typeof CheckCircle2 }> = {
+const BOOK_STATUS: Record<
+  BookStatus,
+  { variant: "forest" | "amber" | "muted" | "secondary"; icon: typeof CheckCircle2 }
+> = {
   Available: { variant: "forest", icon: CheckCircle2 },
   Reserved: { variant: "amber", icon: Lock },
   Swapped: { variant: "secondary", icon: Repeat2 },
@@ -27,7 +30,10 @@ export function ConditionBadge({ condition }: { condition: BookCondition }) {
     <Badge variant="outline" className="gap-1.5" title={`Condition: ${condition}`}>
       <span className="flex gap-0.5" aria-hidden>
         {[0, 1, 2, 3].map((i) => (
-          <span key={i} className={i < filled ? "size-1.5 rounded-full bg-primary" : "size-1.5 rounded-full bg-border"} />
+          <span
+            key={i}
+            className={i < filled ? "bg-primary size-1.5 rounded-full" : "bg-border size-1.5 rounded-full"}
+          />
         ))}
       </span>
       <span>

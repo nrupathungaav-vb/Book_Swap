@@ -8,7 +8,11 @@ import type { ActionResult } from "@/types";
 export async function createReport(input: ReportInput): Promise<ActionResult> {
   const parsed = reportSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const { user, supabase } = await requireUser();

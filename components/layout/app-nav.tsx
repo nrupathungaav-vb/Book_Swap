@@ -18,7 +18,7 @@ export function AppNav() {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
+              "text-muted-foreground hover:bg-accent hover:text-foreground rounded-md px-3 py-2 text-sm font-medium transition-colors",
               active && "bg-accent text-foreground",
             )}
           >
@@ -36,7 +36,7 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
+      className="bg-background/95 fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden"
     >
       <ul className="grid grid-cols-6">
         {APP_NAV.map((item) => {
@@ -48,7 +48,7 @@ export function MobileTabBar() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-1 py-2 text-[11px] font-medium text-muted-foreground",
+                  "text-muted-foreground flex flex-col items-center gap-0.5 px-1 py-2 text-[11px] font-medium",
                   active && "text-primary",
                 )}
               >

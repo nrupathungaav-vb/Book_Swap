@@ -38,14 +38,18 @@ export function FormField({
           </span>
         )}
       </Label>
-      {React.cloneElement(children, { id, "aria-invalid": Boolean(error) || undefined, "aria-describedby": describedBy })}
+      {React.cloneElement(children, {
+        id,
+        "aria-invalid": Boolean(error) || undefined,
+        "aria-describedby": describedBy,
+      })}
       {description && !error && (
-        <p id={descriptionId} className="text-xs text-muted-foreground">
+        <p id={descriptionId} className="text-muted-foreground text-xs">
           {description}
         </p>
       )}
       {error && (
-        <p id={errorId} role="alert" className="text-xs font-medium text-destructive">
+        <p id={errorId} role="alert" className="text-destructive text-xs font-medium">
           {error}
         </p>
       )}

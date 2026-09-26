@@ -1,7 +1,9 @@
 import type { Notification, NotificationType } from "@/types";
 
 /** Where clicking a notification takes the user. */
-export function notificationHref(n: Pick<Notification, "type" | "related_swap_id" | "related_book_id">): string {
+export function notificationHref(
+  n: Pick<Notification, "type" | "related_swap_id" | "related_book_id">,
+): string {
   if (n.related_swap_id) return `/swaps/${n.related_swap_id}`;
   if (n.type === "mutual_match") return "/matches";
   if (n.related_book_id) return `/books/${n.related_book_id}`;

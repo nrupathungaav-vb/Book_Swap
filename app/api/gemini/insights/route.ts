@@ -28,7 +28,11 @@ export async function POST(request: Request) {
     if (!allowed) return jsonError("You've reached the hourly AI limit. Please try again later.", 429);
 
     const insights = await generateInsights(book, { refresh: parsed.data.refresh });
-    const body: GeminiResponse = { insights, model: serverEnv().GEMINI_MODEL, generatedAt: new Date().toISOString() };
+    const body: GeminiResponse = {
+      insights,
+      model: serverEnv().GEMINI_MODEL,
+      generatedAt: new Date().toISOString(),
+    };
     return NextResponse.json(body, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     if (error instanceof GeminiError) return jsonError(error.message, error.status);

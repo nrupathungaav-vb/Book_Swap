@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-export const emailSchema = z.string().trim().toLowerCase().pipe(z.email({ message: "Enter a valid email address." }));
+export const emailSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.email({ message: "Enter a valid email address." }));
 
 export const passwordSchema = z
   .string()

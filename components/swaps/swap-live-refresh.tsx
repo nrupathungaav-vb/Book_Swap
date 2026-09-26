@@ -11,8 +11,10 @@ export function SwapLiveRefresh({ swapId }: { swapId: string }) {
     const supabase = createClient();
     const channel = supabase
       .channel(`swap-status:${swapId}`)
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "swap_requests", filter: `id=eq.${swapId}` }, () =>
-        router.refresh(),
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "swap_requests", filter: `id=eq.${swapId}` },
+        () => router.refresh(),
       )
       .subscribe();
     return () => {

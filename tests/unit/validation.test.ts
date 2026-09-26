@@ -23,8 +23,12 @@ describe("auth validation", () => {
   it("enforces password rules and matching confirmation", () => {
     const base = { fullName: "Alice", email: "a@b.co", password: "bookswap1", confirmPassword: "bookswap1" };
     expect(registerSchema.safeParse(base).success).toBe(true);
-    expect(registerSchema.safeParse({ ...base, password: "short1", confirmPassword: "short1" }).success).toBe(false);
-    expect(registerSchema.safeParse({ ...base, password: "lettersonly", confirmPassword: "lettersonly" }).success).toBe(false);
+    expect(registerSchema.safeParse({ ...base, password: "short1", confirmPassword: "short1" }).success).toBe(
+      false,
+    );
+    expect(
+      registerSchema.safeParse({ ...base, password: "lettersonly", confirmPassword: "lettersonly" }).success,
+    ).toBe(false);
     const mismatch = registerSchema.safeParse({ ...base, confirmPassword: "different1" });
     expect(mismatch.success).toBe(false);
     expect(mismatch.error?.issues[0]?.path).toEqual(["confirmPassword"]);
@@ -49,7 +53,9 @@ describe("book validation", () => {
   });
 
   it("only allows https Google cover URLs", () => {
-    expect(bookSchema.safeParse({ ...valid, googleCoverUrl: "http://books.google.com/x" }).success).toBe(false);
+    expect(bookSchema.safeParse({ ...valid, googleCoverUrl: "http://books.google.com/x" }).success).toBe(
+      false,
+    );
     expect(bookSchema.safeParse({ ...valid, googleCoverUrl: "javascript:alert(1)" }).success).toBe(false);
     expect(bookSchema.parse({ ...valid, googleCoverUrl: "" }).googleCoverUrl).toBeNull();
   });
@@ -87,7 +93,10 @@ describe("meeting / profile / AI validation", () => {
     expect(meetingSchema.safeParse({ ...base, lat: 120 }).success).toBe(false);
     expect(meetingSchema.safeParse({ ...base, locationName: "x" }).success).toBe(false);
     expect(meetingSchema.safeParse({ ...base, suggestedTime: "2000-01-01T10:00:00Z" }).success).toBe(false);
-    expect(meetingSchema.safeParse({ ...base, suggestedTime: new Date(Date.now() + 86_400_000).toISOString() }).success).toBe(true);
+    expect(
+      meetingSchema.safeParse({ ...base, suggestedTime: new Date(Date.now() + 86_400_000).toISOString() })
+        .success,
+    ).toBe(true);
   });
 
   it("profile coordinates come in pairs", () => {
@@ -104,7 +113,9 @@ describe("meeting / profile / AI validation", () => {
 
 describe("discover params", () => {
   it("parses valid params and drops junk", () => {
-    expect(parseDiscoverParams({ q: "dune", condition: "Good", distance: "10", sort: "distance", page: "2" })).toEqual({
+    expect(
+      parseDiscoverParams({ q: "dune", condition: "Good", distance: "10", sort: "distance", page: "2" }),
+    ).toEqual({
       q: "dune",
       condition: "Good",
       distance: 10,

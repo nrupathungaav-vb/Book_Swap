@@ -14,7 +14,10 @@ export function SwapActions({
   userId,
   compact = false,
 }: {
-  swap: Pick<SwapRequest, "id" | "status" | "requester_id" | "responder_id" | "requester_completed" | "responder_completed">;
+  swap: Pick<
+    SwapRequest,
+    "id" | "status" | "requester_id" | "responder_id" | "requester_completed" | "responder_completed"
+  >;
   userId: string;
   compact?: boolean;
 }) {
@@ -36,7 +39,13 @@ export function SwapActions({
     });
   };
 
-  if (!actions.canAccept && !actions.canReject && !actions.canCancel && !actions.canComplete && !actions.waitingForOther) {
+  if (
+    !actions.canAccept &&
+    !actions.canReject &&
+    !actions.canCancel &&
+    !actions.canComplete &&
+    !actions.waitingForOther
+  ) {
     return null;
   }
 
@@ -58,11 +67,12 @@ export function SwapActions({
           disabled={pending}
           onClick={() => run("complete", "Confirm you've handed over your book and received theirs?")}
         >
-          {pending ? <Loader2 className="animate-spin" aria-hidden /> : <CheckCheck aria-hidden />} We&apos;ve swapped
+          {pending ? <Loader2 className="animate-spin" aria-hidden /> : <CheckCheck aria-hidden />} We&apos;ve
+          swapped
         </Button>
       )}
       {actions.waitingForOther && (
-        <span className="inline-flex items-center gap-1.5 rounded-md bg-amber/15 px-3 py-1.5 text-sm">
+        <span className="bg-amber/15 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm">
           <Hourglass className="size-4" aria-hidden /> Waiting for the other reader to confirm
         </span>
       )}
@@ -73,7 +83,12 @@ export function SwapActions({
           className="text-destructive hover:text-destructive"
           disabled={pending}
           onClick={() =>
-            run("cancel", swap.status === "Accepted" ? "Cancel this swap? Both books will become available again." : "Withdraw your request?")
+            run(
+              "cancel",
+              swap.status === "Accepted"
+                ? "Cancel this swap? Both books will become available again."
+                : "Withdraw your request?",
+            )
           }
         >
           {swap.status === "Accepted" ? "Cancel swap" : "Withdraw request"}

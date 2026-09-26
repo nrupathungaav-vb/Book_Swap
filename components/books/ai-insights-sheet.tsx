@@ -6,7 +6,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { GeminiInsights, GeminiResponse } from "@/types";
@@ -53,7 +60,7 @@ export function AiInsightsButton({
       </SheetTrigger>
       <SheetContent className="w-full gap-0 overflow-y-auto p-0 sm:max-w-lg">
         <SheetHeader className="border-b">
-          <p className="flex items-center gap-1.5 text-xs font-semibold tracking-[0.18em] text-primary uppercase">
+          <p className="text-primary flex items-center gap-1.5 text-xs font-semibold tracking-[0.18em] uppercase">
             <Sparkles className="size-3.5" aria-hidden /> Know Before You Swap
           </p>
           <SheetTitle>{book.title}</SheetTitle>
@@ -100,7 +107,8 @@ function InsightsBody({ bookId }: { bookId: string }) {
       <Alert variant="info">
         <Info aria-hidden />
         <AlertDescription>
-          AI-generated impressions, not verified book facts. Always check the listing and photo for the copy itself.
+          AI-generated impressions, not verified book facts. Always check the listing and photo for the copy
+          itself.
         </AlertDescription>
       </Alert>
 
@@ -118,7 +126,9 @@ function InsightsBody({ bookId }: { bookId: string }) {
             </AlertDescription>
           </Alert>
         )}
-        {state.status === "ready" && <InsightsView insights={state.data.insights} onRefresh={() => void load(true)} />}
+        {state.status === "ready" && (
+          <InsightsView insights={state.data.insights} onRefresh={() => void load(true)} />
+        )}
       </section>
 
       <QuestionBox bookId={bookId} />
@@ -145,7 +155,10 @@ function InsightsSkeleton() {
   );
 }
 
-const CONFIDENCE_COPY: Record<GeminiInsights["confidence"], { label: string; variant: "forest" | "amber" | "destructive" }> = {
+const CONFIDENCE_COPY: Record<
+  GeminiInsights["confidence"],
+  { label: string; variant: "forest" | "amber" | "destructive" }
+> = {
   high: { label: "AI is familiar with this book", variant: "forest" },
   medium: { label: "AI is partly familiar — double-check", variant: "amber" },
   low: { label: "AI doesn't know this exact book", variant: "destructive" },
@@ -181,8 +194,8 @@ function InsightsView({ insights, onRefresh }: { insights: GeminiInsights; onRef
               ["Difficulty", insights.tone.difficulty],
             ] as const
           ).map(([label, value]) => (
-            <div key={label} className="rounded-lg bg-muted p-3">
-              <dt className="text-xs text-muted-foreground">{label}</dt>
+            <div key={label} className="bg-muted rounded-lg p-3">
+              <dt className="text-muted-foreground text-xs">{label}</dt>
               <dd className="font-medium">{value}</dd>
             </div>
           ))}
@@ -210,7 +223,7 @@ function InsightsView({ insights, onRefresh }: { insights: GeminiInsights; onRef
             {insights.similarReads.map((read) => (
               <li key={`${read.title}-${read.author}`} className="rounded-lg border p-3 text-sm">
                 <p className="font-medium">
-                  {read.title} <span className="font-normal text-muted-foreground">· {read.author}</span>
+                  {read.title} <span className="text-muted-foreground font-normal">· {read.author}</span>
                 </p>
                 <p className="text-muted-foreground">{read.why}</p>
               </li>
@@ -219,7 +232,7 @@ function InsightsView({ insights, onRefresh }: { insights: GeminiInsights; onRef
         </div>
       )}
 
-      {insights.caveats && <p className="text-xs text-muted-foreground italic">Note: {insights.caveats}</p>}
+      {insights.caveats && <p className="text-muted-foreground text-xs italic">Note: {insights.caveats}</p>}
     </div>
   );
 }
@@ -293,7 +306,7 @@ function QuestionBox({ bookId }: { bookId: string }) {
             type="button"
             disabled={streaming}
             onClick={() => void ask(prompt)}
-            className="rounded-full border bg-card px-3 py-1 text-xs transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-50"
+            className="bg-card hover:bg-accent focus-visible:ring-ring rounded-full border px-3 py-1 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
           >
             {prompt}
           </button>
@@ -306,11 +319,14 @@ function QuestionBox({ bookId }: { bookId: string }) {
             key={index}
             className={cn(
               "rounded-lg p-3 text-sm whitespace-pre-wrap",
-              turn.role === "user" ? "ml-8 bg-primary/10" : "mr-8 bg-muted",
+              turn.role === "user" ? "bg-primary/10 ml-8" : "bg-muted mr-8",
             )}
           >
             <span className="sr-only">{turn.role === "user" ? "You asked:" : "AI answered:"}</span>
-            {turn.text || (streaming && index === turns.length - 1 ? <Loader2 className="size-4 animate-spin" aria-label="Thinking" /> : null)}
+            {turn.text ||
+              (streaming && index === turns.length - 1 ? (
+                <Loader2 className="size-4 animate-spin" aria-label="Thinking" />
+              ) : null)}
           </div>
         ))}
       </div>

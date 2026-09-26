@@ -53,32 +53,62 @@ export function ReportActions({
       )}
       <div className="flex flex-wrap gap-2">
         {status === "Open" && (
-          <Button size="sm" variant="outline" disabled={pending} onClick={() => run(() => updateReportStatus(reportId, "Reviewing", notes))}>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={pending}
+            onClick={() => run(() => updateReportStatus(reportId, "Reviewing", notes))}
+          >
             Start review
           </Button>
         )}
         {!closed && (
           <>
-            <Button size="sm" variant="forest" disabled={pending} onClick={() => run(() => updateReportStatus(reportId, "Resolved", notes))}>
+            <Button
+              size="sm"
+              variant="forest"
+              disabled={pending}
+              onClick={() => run(() => updateReportStatus(reportId, "Resolved", notes))}
+            >
               Resolve
             </Button>
-            <Button size="sm" variant="ghost" disabled={pending} onClick={() => run(() => updateReportStatus(reportId, "Dismissed", notes))}>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={pending}
+              onClick={() => run(() => updateReportStatus(reportId, "Dismissed", notes))}
+            >
               Dismiss
             </Button>
           </>
         )}
         {closed && (
-          <Button size="sm" variant="ghost" disabled={pending} onClick={() => run(() => updateReportStatus(reportId, "Open", null))}>
+          <Button
+            size="sm"
+            variant="ghost"
+            disabled={pending}
+            onClick={() => run(() => updateReportStatus(reportId, "Open", null))}
+          >
             Reopen
           </Button>
         )}
         {book && book.status === "Available" && (
-          <Button size="sm" variant="destructive" disabled={pending} onClick={() => run(() => adminSetBookVisibility(book.id, true))}>
+          <Button
+            size="sm"
+            variant="destructive"
+            disabled={pending}
+            onClick={() => run(() => adminSetBookVisibility(book.id, true))}
+          >
             <EyeOff aria-hidden /> Hide book
           </Button>
         )}
         {book && book.status === "Hidden" && book.hiddenByAdmin && (
-          <Button size="sm" variant="outline" disabled={pending} onClick={() => run(() => adminSetBookVisibility(book.id, false))}>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={pending}
+            onClick={() => run(() => adminSetBookVisibility(book.id, false))}
+          >
             <Eye aria-hidden /> Restore book
           </Button>
         )}

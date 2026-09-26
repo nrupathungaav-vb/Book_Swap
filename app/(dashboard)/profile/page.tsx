@@ -18,12 +18,18 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <PageHeader eyebrow="Profile" title="Your profile" description="This is how other readers see you. Your email and exact location are never shown." />
+      <PageHeader
+        eyebrow="Profile"
+        title="Your profile"
+        description="This is how other readers see you. Your email and exact location are never shown."
+      />
       {welcome && (
         <Alert variant="success">
           <PartyPopper aria-hidden />
           <AlertTitle>Welcome to BookSwap!</AlertTitle>
-          <AlertDescription>Set your city and approximate location, then list your first book.</AlertDescription>
+          <AlertDescription>
+            Set your city and approximate location, then list your first book.
+          </AlertDescription>
         </Alert>
       )}
       <Card>
@@ -37,7 +43,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
       <Card>
         <CardHeader>
           <CardTitle>Details</CardTitle>
-          <p className="text-sm text-muted-foreground">Signed in as {profile.email}</p>
+          <p className="text-muted-foreground text-sm">Signed in as {profile.email}</p>
         </CardHeader>
         <CardContent>
           <ProfileForm profile={profile} />

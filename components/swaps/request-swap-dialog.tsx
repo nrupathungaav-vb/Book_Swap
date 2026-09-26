@@ -102,7 +102,12 @@ export function RequestSwapButton({
       }}
     >
       <DialogTrigger asChild>
-        <Button size={size} className={className} disabled={disabled} title={disabled ? "This book isn't available right now" : undefined}>
+        <Button
+          size={size}
+          className={className}
+          disabled={disabled}
+          title={disabled ? "This book isn't available right now" : undefined}
+        >
           <ArrowLeftRight aria-hidden /> {label}
         </Button>
       </DialogTrigger>
@@ -113,11 +118,11 @@ export function RequestSwapButton({
         </DialogHeader>
 
         {!myBooks && !loadError && (
-          <p className="flex items-center gap-2 text-sm text-muted-foreground" role="status">
+          <p className="text-muted-foreground flex items-center gap-2 text-sm" role="status">
             <Loader2 className="size-4 animate-spin" aria-hidden /> Loading your shelf…
           </p>
         )}
-        {loadError && <p className="text-sm text-destructive">{loadError}</p>}
+        {loadError && <p className="text-destructive text-sm">{loadError}</p>}
 
         {myBooks && myBooks.length === 0 && (
           <div className="rounded-lg border border-dashed p-6 text-center">
@@ -134,29 +139,46 @@ export function RequestSwapButton({
           <form onSubmit={onSubmit} className="space-y-4" noValidate>
             <fieldset>
               <legend className="mb-2 text-sm font-medium">Your book to offer</legend>
-              <div role="radiogroup" className="grid max-h-64 grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-4">
+              <div
+                role="radiogroup"
+                className="grid max-h-64 grid-cols-3 gap-2 overflow-y-auto sm:grid-cols-4"
+              >
                 {myBooks.map((own) => (
                   <label
                     key={own.id}
                     className={cn(
-                      "cursor-pointer rounded-lg border-2 border-transparent p-1 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring",
+                      "has-[:focus-visible]:ring-ring cursor-pointer rounded-lg border-2 border-transparent p-1 transition-colors has-[:focus-visible]:ring-2",
                       selected === own.id && "border-primary bg-primary/5",
                     )}
                   >
-                    <input type="radio" value={own.id} className="sr-only" {...form.register("offeredBookId")} />
+                    <input
+                      type="radio"
+                      value={own.id}
+                      className="sr-only"
+                      {...form.register("offeredBookId")}
+                    />
                     <BookCover book={own} sizes="120px" className="rounded-md" />
                     <span className="mt-1 line-clamp-2 block text-xs font-medium">{own.title}</span>
                   </label>
                 ))}
               </div>
               {form.formState.errors.offeredBookId && (
-                <p role="alert" className="mt-2 text-xs text-destructive">
+                <p role="alert" className="text-destructive mt-2 text-xs">
                   {form.formState.errors.offeredBookId.message}
                 </p>
               )}
             </fieldset>
-            <FormField id="swap-note" label="Add a note (optional)" error={form.formState.errors.note?.message}>
-              <Textarea rows={3} maxLength={500} placeholder="Hi! I'm usually free on weekends near the city library." {...form.register("note")} />
+            <FormField
+              id="swap-note"
+              label="Add a note (optional)"
+              error={form.formState.errors.note?.message}
+            >
+              <Textarea
+                rows={3}
+                maxLength={500}
+                placeholder="Hi! I'm usually free on weekends near the city library."
+                {...form.register("note")}
+              />
             </FormField>
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => setOpen(false)}>

@@ -70,7 +70,9 @@ export function ReportButton({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{target === "book" ? "Report this listing" : "Report this reader"}</DialogTitle>
-          <DialogDescription>Reports are private. A moderator will review it; the other person won&apos;t see who reported.</DialogDescription>
+          <DialogDescription>
+            Reports are private. A moderator will review it; the other person won&apos;t see who reported.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <FormField id="report-reason" label="Reason" required error={errors.reason?.message}>
@@ -86,7 +88,12 @@ export function ReportButton({
             </NativeSelect>
           </FormField>
           <FormField id="report-description" label="Details (optional)" error={errors.description?.message}>
-            <Textarea rows={4} maxLength={1000} placeholder="What happened?" {...form.register("description")} />
+            <Textarea
+              rows={4}
+              maxLength={1000}
+              placeholder="What happened?"
+              {...form.register("description")}
+            />
           </FormField>
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>

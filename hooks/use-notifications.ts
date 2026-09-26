@@ -60,7 +60,9 @@ export function useNotifications(userId: string, initialUnread: number) {
   }, [userId]);
 
   const markRead = useCallback((id: string) => {
-    setItems((current) => current?.map((item) => (item.id === id ? { ...item, is_read: true } : item)) ?? current);
+    setItems(
+      (current) => current?.map((item) => (item.id === id ? { ...item, is_read: true } : item)) ?? current,
+    );
     setUnread((count) => Math.max(0, count - 1));
   }, []);
 

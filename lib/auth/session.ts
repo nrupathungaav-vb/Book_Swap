@@ -55,7 +55,11 @@ export async function requireUser(): Promise<{ user: User; supabase: TypedSupaba
 }
 
 /** Admin gate checked on the server (and again by is_admin() inside Postgres). */
-export async function requireAdmin(): Promise<{ user: User; supabase: TypedSupabaseClient; profile: Profile }> {
+export async function requireAdmin(): Promise<{
+  user: User;
+  supabase: TypedSupabaseClient;
+  profile: Profile;
+}> {
   const { user, supabase } = await requireUser();
   const profile = await getCurrentProfile();
   if (!profile || profile.role !== "admin") throw new ForbiddenError("Admin access required.");

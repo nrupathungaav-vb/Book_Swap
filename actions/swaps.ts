@@ -19,7 +19,11 @@ function revalidateSwaps(swapId?: string) {
 export async function createSwapRequest(input: SwapRequestInput): Promise<ActionResult<{ id: string }>> {
   const parsed = swapRequestSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const { supabase } = await requireUser();
@@ -29,7 +33,8 @@ export async function createSwapRequest(input: SwapRequestInput): Promise<Action
       p_offered_book_id: parsed.data.offeredBookId,
       p_note: parsed.data.note,
     });
-    if (error || !data) return { ok: false, error: friendlyDbError(error, "Your swap request couldn't be sent.") };
+    if (error || !data)
+      return { ok: false, error: friendlyDbError(error, "Your swap request couldn't be sent.") };
     revalidateSwaps(data);
     return { ok: true, data: { id: data }, message: "Swap request sent!" };
   } catch (error) {
@@ -59,8 +64,11 @@ export async function updateSwap(
   if (!parsed.success) return { ok: false, error: "Invalid request." };
   try {
     const { supabase } = await requireUser();
-    const { data, error } = await supabase.rpc(RPC_BY_ACTION[parsed.data.action], { p_swap_id: parsed.data.swapId });
-    if (error || !data) return { ok: false, error: friendlyDbError(error, "That didn't work. Please refresh and try again.") };
+    const { data, error } = await supabase.rpc(RPC_BY_ACTION[parsed.data.action], {
+      p_swap_id: parsed.data.swapId,
+    });
+    if (error || !data)
+      return { ok: false, error: friendlyDbError(error, "That didn't work. Please refresh and try again.") };
     revalidateSwaps(parsed.data.swapId);
     const message =
       parsed.data.action === "complete" && data.status === "Completed"

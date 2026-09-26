@@ -29,10 +29,15 @@ describe("formatting", () => {
 
 describe("bookImageUrl — physical photo always wins", () => {
   it("prefers the uploaded photo, then Google, then nothing", () => {
-    expect(bookImageUrl({ cover_image_url: "https://x.supabase.co/p.jpg", google_cover_url: "https://books.google.com/g" })).toBe(
-      "https://x.supabase.co/p.jpg",
+    expect(
+      bookImageUrl({
+        cover_image_url: "https://x.supabase.co/p.jpg",
+        google_cover_url: "https://books.google.com/g",
+      }),
+    ).toBe("https://x.supabase.co/p.jpg");
+    expect(bookImageUrl({ cover_image_url: null, google_cover_url: "https://books.google.com/g" })).toBe(
+      "https://books.google.com/g",
     );
-    expect(bookImageUrl({ cover_image_url: null, google_cover_url: "https://books.google.com/g" })).toBe("https://books.google.com/g");
     expect(bookImageUrl({ cover_image_url: null, google_cover_url: null })).toBeNull();
   });
 });
@@ -66,9 +71,17 @@ describe("storage paths", () => {
 
 describe("notificationHref", () => {
   it("routes to the most specific place", () => {
-    expect(notificationHref({ type: "new_message", related_swap_id: "s1", related_book_id: null })).toBe("/swaps/s1");
-    expect(notificationHref({ type: "mutual_match", related_swap_id: null, related_book_id: "b1" })).toBe("/matches");
-    expect(notificationHref({ type: "report_update", related_swap_id: null, related_book_id: "b1" })).toBe("/books/b1");
-    expect(notificationHref({ type: "report_update", related_swap_id: null, related_book_id: null })).toBe("/notifications");
+    expect(notificationHref({ type: "new_message", related_swap_id: "s1", related_book_id: null })).toBe(
+      "/swaps/s1",
+    );
+    expect(notificationHref({ type: "mutual_match", related_swap_id: null, related_book_id: "b1" })).toBe(
+      "/matches",
+    );
+    expect(notificationHref({ type: "report_update", related_swap_id: null, related_book_id: "b1" })).toBe(
+      "/books/b1",
+    );
+    expect(notificationHref({ type: "report_update", related_swap_id: null, related_book_id: null })).toBe(
+      "/notifications",
+    );
   });
 });

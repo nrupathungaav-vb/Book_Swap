@@ -60,11 +60,17 @@ export function AvatarUploader({ name, avatarUrl }: { name: string | null; avata
             event.target.value = "";
           }}
         />
-        <Button type="button" variant="outline" size="sm" onClick={() => input.current?.click()} disabled={progress !== null}>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => input.current?.click()}
+          disabled={progress !== null}
+        >
           {progress !== null ? <Loader2 className="animate-spin" aria-hidden /> : <Camera aria-hidden />}
           {progress !== null ? `Uploading ${progress}%` : "Change avatar"}
         </Button>
-        <p className="text-xs text-muted-foreground">JPG, PNG or WebP, up to 2 MB.</p>
+        <p className="text-muted-foreground text-xs">JPG, PNG or WebP, up to 2 MB.</p>
       </div>
     </div>
   );

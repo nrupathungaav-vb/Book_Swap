@@ -5,7 +5,13 @@ import { RotateCcw } from "lucide-react";
 import { ErrorState } from "@/components/layout/error-state";
 import { Button } from "@/components/ui/button";
 
-export default function DashboardError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function DashboardError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   useEffect(() => {
     console.error(error);
   }, [error]);

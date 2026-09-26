@@ -18,7 +18,11 @@ function revalidateBooks(bookId?: string) {
 export async function createBook(input: BookInput): Promise<ActionResult<{ id: string }>> {
   const parsed = bookSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const { user, supabase } = await requireUser();
@@ -52,7 +56,11 @@ export async function updateBook(bookId: string, input: BookInput): Promise<Acti
   const parsed = bookSchema.safeParse(input);
   if (!id.success) return { ok: false, error: "Invalid book." };
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const { user, supabase } = await requireUser();
@@ -114,7 +122,9 @@ export async function relistBook(bookId: string): Promise<ActionResult<{ id: str
     const { user, supabase } = await requireUser();
     const { data: original, error: readError } = await supabase
       .from("books")
-      .select("title, author, genre, condition, description, google_books_id, google_cover_url, isbn, status, user_id")
+      .select(
+        "title, author, genre, condition, description, google_books_id, google_cover_url, isbn, status, user_id",
+      )
       .eq("id", id.data)
       .maybeSingle();
     if (readError || !original) return { ok: false, error: "Book not found." };
@@ -137,7 +147,8 @@ export async function relistBook(bookId: string): Promise<ActionResult<{ id: str
       })
       .select("id")
       .single();
-    if (error || !data) return { ok: false, error: friendlyDbError(error, "Couldn't create the new listing.") };
+    if (error || !data)
+      return { ok: false, error: friendlyDbError(error, "Couldn't create the new listing.") };
     revalidateBooks(data.id);
     return { ok: true, data: { id: data.id }, message: "Listed again — add a fresh photo." };
   } catch (error) {

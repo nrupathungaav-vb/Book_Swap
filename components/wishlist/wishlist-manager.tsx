@@ -64,18 +64,29 @@ export function WishlistManager({ initialItems }: { initialItems: Wishlist[] }) 
       <Card className="h-fit">
         <CardHeader>
           <CardTitle>Add a book you want</CardTitle>
-          <p className="text-sm text-muted-foreground">Leave the author blank to match any edition or author with that title.</p>
+          <p className="text-muted-foreground text-sm">
+            Leave the author blank to match any edition or author with that title.
+          </p>
         </CardHeader>
         <CardContent>
           <form onSubmit={onSubmit} className="space-y-4" noValidate>
             <FormField id="wish-title" label="Title" required error={form.formState.errors.title?.message}>
-              <Input maxLength={300} placeholder="e.g. The Left Hand of Darkness" {...form.register("title")} />
+              <Input
+                maxLength={300}
+                placeholder="e.g. The Left Hand of Darkness"
+                {...form.register("title")}
+              />
             </FormField>
             <FormField id="wish-author" label="Author" error={form.formState.errors.author?.message}>
               <Input maxLength={200} placeholder="Optional" {...form.register("author")} />
             </FormField>
             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? <Loader2 className="animate-spin" aria-hidden /> : <Plus aria-hidden />} Add to wishlist
+              {form.formState.isSubmitting ? (
+                <Loader2 className="animate-spin" aria-hidden />
+              ) : (
+                <Plus aria-hidden />
+              )}{" "}
+              Add to wishlist
             </Button>
           </form>
         </CardContent>
@@ -84,22 +95,39 @@ export function WishlistManager({ initialItems }: { initialItems: Wishlist[] }) 
       <section aria-labelledby="wishlist-heading" className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <h2 id="wishlist-heading" className="text-xl font-semibold">
-            Your wishlist <span className="text-base font-normal text-muted-foreground">({items.length})</span>
+            Your wishlist{" "}
+            <span className="text-muted-foreground text-base font-normal">({items.length})</span>
           </h2>
           {items.length > 3 && (
             <div className="relative w-48">
               <label htmlFor="wishlist-search" className="sr-only">
                 Search your wishlist
               </label>
-              <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-              <Input id="wishlist-search" type="search" value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Search…" className="h-9 pl-8" />
+              <Search
+                className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2"
+                aria-hidden
+              />
+              <Input
+                id="wishlist-search"
+                type="search"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder="Search…"
+                className="h-9 pl-8"
+              />
             </div>
           )}
         </div>
         {items.length === 0 ? (
-          <EmptyState icon={Heart} title="No wishlist items yet." description="Add the books you'd love to read — that's how we find mutual matches." />
+          <EmptyState
+            icon={Heart}
+            title="No wishlist items yet."
+            description="Add the books you'd love to read — that's how we find mutual matches."
+          />
         ) : visible.length === 0 ? (
-          <p className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">No wishlist items match “{filter}”.</p>
+          <p className="text-muted-foreground rounded-xl border border-dashed p-6 text-center text-sm">
+            No wishlist items match “{filter}”.
+          </p>
         ) : (
           <ul className="space-y-2">
             <AnimatePresence initial={false}>
@@ -110,16 +138,22 @@ export function WishlistManager({ initialItems }: { initialItems: Wishlist[] }) 
                   initial={reduce ? false : { opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={reduce ? { opacity: 0 } : { opacity: 0, x: 20 }}
-                  className="flex items-center gap-3 rounded-xl border bg-card p-3 shadow-sm"
+                  className="bg-card flex items-center gap-3 rounded-xl border p-3 shadow-sm"
                 >
-                  <Heart className="size-5 shrink-0 fill-primary/20 text-primary" aria-hidden />
+                  <Heart className="fill-primary/20 text-primary size-5 shrink-0" aria-hidden />
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-serif font-semibold">{item.title}</p>
-                    <p className="truncate text-sm text-muted-foreground">
+                    <p className="text-muted-foreground truncate text-sm">
                       {item.author || "Any author"} · added {formatRelativeTime(item.created_at)}
                     </p>
                   </div>
-                  <Button variant="ghost" size="icon-sm" onClick={() => remove(item.id)} disabled={removing} aria-label={`Remove ${item.title} from wishlist`}>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => remove(item.id)}
+                    disabled={removing}
+                    aria-label={`Remove ${item.title} from wishlist`}
+                  >
                     <Trash2 aria-hidden />
                   </Button>
                 </motion.li>

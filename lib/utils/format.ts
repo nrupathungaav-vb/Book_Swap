@@ -58,7 +58,10 @@ export function pluralize(count: number, singular: string, plural = `${singular}
 }
 
 /** Display priority: owner's photo of the physical copy → Google cover → none. */
-export function bookImageUrl(book: { cover_image_url: string | null; google_cover_url: string | null }): string | null {
+export function bookImageUrl(book: {
+  cover_image_url: string | null;
+  google_cover_url: string | null;
+}): string | null {
   return book.cover_image_url ?? book.google_cover_url ?? null;
 }
 

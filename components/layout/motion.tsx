@@ -3,7 +3,11 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 
 /** Gentle fade/slide-in that respects prefers-reduced-motion. */
-export function FadeIn({ delay = 0, y = 12, ...props }: HTMLMotionProps<"div"> & { delay?: number; y?: number }) {
+export function FadeIn({
+  delay = 0,
+  y = 12,
+  ...props
+}: HTMLMotionProps<"div"> & { delay?: number; y?: number }) {
   const reduce = useReducedMotion();
   return (
     <motion.div

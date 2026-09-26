@@ -10,7 +10,9 @@ export const discoverParamsSchema = z.object({
   genre: z.preprocess(emptyToUndefined, z.string().trim().max(100).optional()),
   condition: z.preprocess(emptyToUndefined, z.enum(BOOK_CONDITIONS).optional()).catch(undefined),
   status: z.preprocess(emptyToUndefined, z.enum(["Available", "any"]).optional()).catch(undefined),
-  distance: z.preprocess(emptyToUndefined, z.coerce.number().int().min(1).max(500).optional()).catch(undefined),
+  distance: z
+    .preprocess(emptyToUndefined, z.coerce.number().int().min(1).max(500).optional())
+    .catch(undefined),
   sort: z
     .preprocess(emptyToUndefined, z.enum(["newest", "title", "author", "distance", "condition"]).optional())
     .catch(undefined),
@@ -19,7 +21,9 @@ export const discoverParamsSchema = z.object({
 
 export type DiscoverParams = z.infer<typeof discoverParamsSchema>;
 
-export function parseDiscoverParams(searchParams: Record<string, string | string[] | undefined>): DiscoverParams {
+export function parseDiscoverParams(
+  searchParams: Record<string, string | string[] | undefined>,
+): DiscoverParams {
   const flat = Object.fromEntries(
     Object.entries(searchParams).map(([key, value]) => [key, Array.isArray(value) ? value[0] : value]),
   );

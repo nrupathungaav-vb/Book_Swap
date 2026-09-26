@@ -28,8 +28,17 @@ export default async function SwapWorkspacePage({ params }: { params: Promise<{ 
   if (!swap || (swap.requester_id !== user.id && swap.responder_id !== user.id)) notFound();
 
   const [{ data: messages, error: messagesError }, { data: meetings }, profile] = await Promise.all([
-    supabase.from("messages").select("*").eq("swap_request_id", id).order("created_at", { ascending: true }).limit(200),
-    supabase.from("meeting_locations").select("*").eq("swap_request_id", id).order("created_at", { ascending: false }),
+    supabase
+      .from("messages")
+      .select("*")
+      .eq("swap_request_id", id)
+      .order("created_at", { ascending: true })
+      .limit(200),
+    supabase
+      .from("meeting_locations")
+      .select("*")
+      .eq("swap_request_id", id)
+      .order("created_at", { ascending: false }),
     getCurrentProfile(),
   ]);
 
@@ -39,7 +48,10 @@ export default async function SwapWorkspacePage({ params }: { params: Promise<{ 
   const give = iAmRequester ? swap.offered_book : swap.requested_book;
   const get = iAmRequester ? swap.requested_book : swap.offered_book;
   const actions = availableSwapActions(swap, user.id);
-  const defaultCenter = profile?.geo_lat != null && profile.geo_lng != null ? { lat: profile.geo_lat, lng: profile.geo_lng } : null;
+  const defaultCenter =
+    profile?.geo_lat != null && profile.geo_lng != null
+      ? { lat: profile.geo_lat, lng: profile.geo_lng }
+      : null;
 
   return (
     <div className="space-y-6">
@@ -50,13 +62,13 @@ export default async function SwapWorkspacePage({ params }: { params: Promise<{ 
         </Link>
       </Button>
 
-      <section aria-labelledby="swap-heading" className="rounded-2xl border bg-card p-4 shadow-sm sm:p-5">
+      <section aria-labelledby="swap-heading" className="bg-card rounded-2xl border p-4 shadow-sm sm:p-5">
         <div className="flex flex-col gap-5 md:flex-row md:items-center">
           <div className="flex items-center gap-3">
             <Link href={`/books/${give.id}`} className="w-20 sm:w-24">
               <BookCover book={give} sizes="96px" />
             </Link>
-            <ArrowLeftRight className="size-6 shrink-0 text-amber" aria-label="swapped for" />
+            <ArrowLeftRight className="text-amber size-6 shrink-0" aria-label="swapped for" />
             <Link href={`/books/${get.id}`} className="w-20 sm:w-24">
               <BookCover book={get} sizes="96px" />
             </Link>
@@ -65,16 +77,24 @@ export default async function SwapWorkspacePage({ params }: { params: Promise<{ 
             <div className="flex flex-wrap items-center gap-2">
               <SwapStatusBadge status={swap.status} />
               {swap.status === "Accepted" && (
-                <span className="text-xs text-muted-foreground">
-                  Confirmed by: {[swap.requester_completed && swap.requester.full_name, swap.responder_completed && swap.responder.full_name].filter(Boolean).join(", ") || "no one yet"}
+                <span className="text-muted-foreground text-xs">
+                  Confirmed by:{" "}
+                  {[
+                    swap.requester_completed && swap.requester.full_name,
+                    swap.responder_completed && swap.responder.full_name,
+                  ]
+                    .filter(Boolean)
+                    .join(", ") || "no one yet"}
                 </span>
               )}
             </div>
             <h1 id="swap-heading" className="text-xl leading-snug font-semibold sm:text-2xl">
-              You give <span className="text-primary">“{give.title}”</span> · you get <span className="text-forest">“{get.title}”</span>
+              You give <span className="text-primary">“{give.title}”</span> · you get{" "}
+              <span className="text-forest">“{get.title}”</span>
             </h1>
-            <p className="text-sm text-muted-foreground">
-              Swapping with <span className="font-medium text-foreground">{other.full_name ?? "a reader"}</span>
+            <p className="text-muted-foreground text-sm">
+              Swapping with{" "}
+              <span className="text-foreground font-medium">{other.full_name ?? "a reader"}</span>
               {other.location_city ? ` from ${other.location_city}` : ""}.
             </p>
             {swap.note && <p className="text-sm italic">“{swap.note}”</p>}
@@ -90,7 +110,9 @@ export default async function SwapWorkspacePage({ params }: { params: Promise<{ 
           <AlertDescription>
             <p>Done with “{get.title}” one day? Pass it on.</p>
             <Button asChild size="sm" variant="outline" className="mt-2">
-              <Link href={`/books/new?title=${encodeURIComponent(get.title)}&author=${encodeURIComponent(get.author)}`}>
+              <Link
+                href={`/books/new?title=${encodeURIComponent(get.title)}&author=${encodeURIComponent(get.author)}`}
+              >
                 <BookPlus aria-hidden /> List it on BookSwap
               </Link>
             </Button>

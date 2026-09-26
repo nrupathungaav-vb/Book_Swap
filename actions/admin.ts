@@ -34,7 +34,10 @@ export async function adminSetBookVisibility(bookId: string, hidden: boolean): P
   if (!parsed.success) return { ok: false, error: "Invalid book." };
   try {
     const { supabase } = await requireAdmin();
-    const { error } = await supabase.rpc("admin_set_book_visibility", { p_book_id: parsed.data, p_hidden: hidden });
+    const { error } = await supabase.rpc("admin_set_book_visibility", {
+      p_book_id: parsed.data,
+      p_hidden: hidden,
+    });
     if (error) return { ok: false, error: friendlyDbError(error) };
     revalidatePath("/admin");
     revalidatePath("/discover");

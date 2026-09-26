@@ -37,7 +37,11 @@ export function SwapWorkspace(props: WorkspaceProps) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Swap workspace" className="mb-3 grid grid-cols-2 rounded-lg bg-muted p-1 lg:hidden">
+      <div
+        role="tablist"
+        aria-label="Swap workspace"
+        className="bg-muted mb-3 grid grid-cols-2 rounded-lg p-1 lg:hidden"
+      >
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -48,7 +52,7 @@ export function SwapWorkspace(props: WorkspaceProps) {
             aria-controls={`panel-${tab.id}`}
             onClick={() => setView(tab.id)}
             className={cn(
-              "flex items-center justify-center gap-1.5 rounded-md py-2 text-sm font-medium text-muted-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+              "text-muted-foreground focus-visible:ring-ring flex items-center justify-center gap-1.5 rounded-md py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none",
               view === tab.id && "bg-card text-foreground shadow-sm",
             )}
           >

@@ -65,35 +65,43 @@ export default async function MyBooksPage() {
             return (
               <section key={status} aria-labelledby={`section-${status}`}>
                 <h2 id={`section-${status}`} className="mb-3 text-xl font-semibold">
-                  {SECTION_COPY[status]} <span className="text-base font-normal text-muted-foreground">({group.length})</span>
+                  {SECTION_COPY[status]}{" "}
+                  <span className="text-muted-foreground text-base font-normal">({group.length})</span>
                 </h2>
                 <ul className="grid gap-3 md:grid-cols-2">
                   {group.map((book) => (
-                    <li key={book.id} className="flex gap-4 rounded-xl border bg-card p-3 shadow-sm">
+                    <li key={book.id} className="bg-card flex gap-4 rounded-xl border p-3 shadow-sm">
                       <Link href={`/books/${book.id}`} className="w-24 shrink-0">
                         <BookCover book={book} sizes="96px" />
                       </Link>
                       <div className="flex min-w-0 flex-1 flex-col gap-2">
                         <div>
-                          <Link href={`/books/${book.id}`} className="line-clamp-2 font-serif text-lg leading-snug font-semibold hover:underline">
+                          <Link
+                            href={`/books/${book.id}`}
+                            className="line-clamp-2 font-serif text-lg leading-snug font-semibold hover:underline"
+                          >
                             {book.title}
                           </Link>
-                          <p className="truncate text-sm text-muted-foreground">{book.author}</p>
+                          <p className="text-muted-foreground truncate text-sm">{book.author}</p>
                         </div>
                         <div className="flex flex-wrap gap-1.5">
                           <BookStatusBadge status={book.status} />
                           <ConditionBadge condition={book.condition} />
                           {!book.cover_image_url && book.status !== "Swapped" && (
-                            <span className="text-xs text-amber-700 dark:text-amber">No photo yet</span>
+                            <span className="dark:text-amber text-xs text-amber-700">No photo yet</span>
                           )}
                         </div>
                         {book.hidden_by_admin && (
-                          <p className="flex items-center gap-1 text-xs text-destructive">
+                          <p className="text-destructive flex items-center gap-1 text-xs">
                             <ShieldAlert className="size-3.5" aria-hidden /> Hidden by a moderator
                           </p>
                         )}
                         <div className="mt-auto">
-                          <OwnerBookActions bookId={book.id} status={book.status} hiddenByAdmin={book.hidden_by_admin} />
+                          <OwnerBookActions
+                            bookId={book.id}
+                            status={book.status}
+                            hiddenByAdmin={book.hidden_by_admin}
+                          />
                         </div>
                       </div>
                     </li>

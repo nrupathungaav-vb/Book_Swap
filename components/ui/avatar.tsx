@@ -15,14 +15,23 @@ function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimi
 }
 
 function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
-  return <AvatarPrimitive.Image data-slot="avatar-image" className={cn("aspect-square size-full object-cover", className)} {...props} />;
+  return (
+    <AvatarPrimitive.Image
+      data-slot="avatar-image"
+      className={cn("aspect-square size-full object-cover", className)}
+      {...props}
+    />
+  );
 }
 
 function AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
   return (
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
-      className={cn("flex size-full items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground", className)}
+      className={cn(
+        "bg-accent text-accent-foreground flex size-full items-center justify-center rounded-full text-xs font-semibold",
+        className,
+      )}
       {...props}
     />
   );

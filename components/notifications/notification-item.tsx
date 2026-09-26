@@ -1,5 +1,15 @@
 import Link from "next/link";
-import { ArrowLeftRight, Bell, CheckCircle2, Handshake, MapPin, MessageCircle, ShieldCheck, Sparkles, XCircle } from "lucide-react";
+import {
+  ArrowLeftRight,
+  Bell,
+  CheckCircle2,
+  Handshake,
+  MapPin,
+  MessageCircle,
+  ShieldCheck,
+  Sparkles,
+  XCircle,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { NOTIFICATION_LABEL, notificationHref } from "@/lib/notifications";
 import { cn, formatRelativeTime } from "@/lib/utils";
@@ -34,7 +44,7 @@ export function NotificationItem({
       href={notificationHref(notification)}
       onClick={() => onOpen?.(notification)}
       className={cn(
-        "flex gap-3 rounded-lg p-3 text-left transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none",
+        "hover:bg-accent focus-visible:bg-accent flex gap-3 rounded-lg p-3 text-left transition-colors focus-visible:outline-none",
         !notification.is_read && "bg-amber/10",
       )}
     >
@@ -50,10 +60,12 @@ export function NotificationItem({
         <span className="flex items-center gap-2">
           <span className="truncate text-sm font-medium">{notification.title}</span>
           {!notification.is_read && <span className="sr-only">(unread)</span>}
-          {!notification.is_read && <span aria-hidden className="size-2 shrink-0 rounded-full bg-primary" />}
+          {!notification.is_read && <span aria-hidden className="bg-primary size-2 shrink-0 rounded-full" />}
         </span>
-        <span className={cn("block text-sm text-muted-foreground", compact && "line-clamp-2")}>{notification.message}</span>
-        <span className="block text-xs text-muted-foreground/80">
+        <span className={cn("text-muted-foreground block text-sm", compact && "line-clamp-2")}>
+          {notification.message}
+        </span>
+        <span className="text-muted-foreground/80 block text-xs">
           {NOTIFICATION_LABEL[notification.type]} · {formatRelativeTime(notification.created_at)}
         </span>
       </span>

@@ -16,7 +16,8 @@ export const metadata: Metadata = { title: "Discover books" };
 function hrefWith(params: DiscoverParams, page: number): string {
   const search = new URLSearchParams();
   for (const [key, value] of Object.entries({ ...params, page })) {
-    if (value !== undefined && value !== "" && !(key === "page" && value === 1)) search.set(key, String(value));
+    if (value !== undefined && value !== "" && !(key === "page" && value === 1))
+      search.set(key, String(value));
   }
   const qs = search.toString();
   return qs ? `/discover?${qs}` : "/discover";
@@ -43,10 +44,17 @@ export default async function DiscoverPage({
       p_limit: DISCOVER_PAGE_SIZE,
       p_offset: (page - 1) * DISCOVER_PAGE_SIZE,
     }),
-    supabase.from("books").select("genre").in("status", ["Available", "Reserved"]).not("genre", "is", null).limit(1000),
+    supabase
+      .from("books")
+      .select("genre")
+      .in("status", ["Available", "Reserved"])
+      .not("genre", "is", null)
+      .limit(1000),
   ]);
 
-  const genres = [...new Set((genreRows ?? []).map((row) => row.genre).filter((g): g is string => Boolean(g)))].sort();
+  const genres = [
+    ...new Set((genreRows ?? []).map((row) => row.genre).filter((g): g is string => Boolean(g))),
+  ].sort();
   const total = Number(books?.[0]?.total_count ?? 0);
   const totalPages = Math.max(1, Math.ceil(total / DISCOVER_PAGE_SIZE));
 
@@ -65,14 +73,21 @@ export default async function DiscoverPage({
         <EmptyState
           icon={SearchX}
           title="No books found."
-          description={params.q || params.genre || params.condition || params.distance ? "Try widening your filters." : "Nobody else has listed a book yet — check back soon."}
+          description={
+            params.q || params.genre || params.condition || params.distance
+              ? "Try widening your filters."
+              : "Nobody else has listed a book yet — check back soon."
+          }
         />
       ) : (
         <>
-          <p className="text-sm text-muted-foreground" aria-live="polite">
+          <p className="text-muted-foreground text-sm" aria-live="polite">
             {total} book{total === 1 ? "" : "s"} found
           </p>
-          <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4" key={hrefWith(params, page)}>
+          <Stagger
+            className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"
+            key={hrefWith(params, page)}
+          >
             {books.map((book) => (
               <StaggerItem key={book.id}>
                 <BookCard book={book} />

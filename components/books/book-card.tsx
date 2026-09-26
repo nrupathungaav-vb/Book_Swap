@@ -28,10 +28,17 @@ export interface BookCardData {
 export function BookCard({ book, showActions = true }: { book: BookCardData; showActions?: boolean }) {
   const distance = formatDistance(book.distance_km);
   return (
-    <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition-shadow hover:shadow-md">
-      <Link href={`/books/${book.id}`} className="block focus-visible:outline-none" aria-label={`${book.title} by ${book.author}`}>
+    <article className="group bg-card relative flex h-full flex-col overflow-hidden rounded-xl border shadow-sm transition-shadow hover:shadow-md">
+      <Link
+        href={`/books/${book.id}`}
+        className="block focus-visible:outline-none"
+        aria-label={`${book.title} by ${book.author}`}
+      >
         <div className="relative">
-          <BookCover book={book} className="rounded-none transition-transform duration-300 group-hover:scale-[1.02]" />
+          <BookCover
+            book={book}
+            className="rounded-none transition-transform duration-300 group-hover:scale-[1.02]"
+          />
           <div className="absolute top-2 left-2 flex flex-col items-start gap-1">
             {book.is_mutual_match && (
               <Badge className="bg-forest text-forest-foreground shadow">
@@ -49,14 +56,14 @@ export function BookCard({ book, showActions = true }: { book: BookCardData; sho
               {book.title}
             </Link>
           </h3>
-          <p className="line-clamp-1 text-sm text-muted-foreground">{book.author}</p>
+          <p className="text-muted-foreground line-clamp-1 text-sm">{book.author}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           <ConditionBadge condition={book.condition} />
           {book.genre && <Badge variant="muted">{book.genre}</Badge>}
         </div>
         {(book.owner_name || distance) && (
-          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+          <p className="text-muted-foreground flex items-center gap-1 text-xs">
             <MapPin className="size-3.5 shrink-0" aria-hidden />
             <span className="truncate">
               {book.owner_name}

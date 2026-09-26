@@ -19,7 +19,10 @@ export function isActiveSwap(status: SwapStatus): boolean {
 
 export type SwapRole = "requester" | "responder";
 
-export function swapRole(swap: Pick<SwapRequest, "requester_id" | "responder_id">, userId: string): SwapRole | null {
+export function swapRole(
+  swap: Pick<SwapRequest, "requester_id" | "responder_id">,
+  userId: string,
+): SwapRole | null {
   if (swap.requester_id === userId) return "requester";
   if (swap.responder_id === userId) return "responder";
   return null;
@@ -27,7 +30,10 @@ export function swapRole(swap: Pick<SwapRequest, "requester_id" | "responder_id"
 
 /** Which actions the UI should offer this user. The database re-checks all of them. */
 export function availableSwapActions(
-  swap: Pick<SwapRequest, "status" | "requester_id" | "responder_id" | "requester_completed" | "responder_completed">,
+  swap: Pick<
+    SwapRequest,
+    "status" | "requester_id" | "responder_id" | "requester_completed" | "responder_completed"
+  >,
   userId: string,
 ) {
   const role = swapRole(swap, userId);

@@ -11,7 +11,11 @@ import type { ActionResult } from "@/types";
 export async function signInWithPassword(input: LoginInput): Promise<ActionResult> {
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const supabase = await createClient();
@@ -28,10 +32,16 @@ export async function signInWithPassword(input: LoginInput): Promise<ActionResul
   }
 }
 
-export async function signUpWithPassword(input: RegisterInput): Promise<ActionResult<{ needsConfirmation: boolean }>> {
+export async function signUpWithPassword(
+  input: RegisterInput,
+): Promise<ActionResult<{ needsConfirmation: boolean }>> {
   const parsed = registerSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const supabase = await createClient();

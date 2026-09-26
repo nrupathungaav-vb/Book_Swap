@@ -20,7 +20,11 @@ export default async function NotificationsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader eyebrow="Inbox" title="Notifications" />
-      {error ? <ErrorState message="Unable to load notifications." /> : <NotificationsList initial={data ?? []} />}
+      {error ? (
+        <ErrorState message="Unable to load notifications." />
+      ) : (
+        <NotificationsList initial={data ?? []} />
+      )}
     </div>
   );
 }

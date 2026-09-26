@@ -1,6 +1,6 @@
 # 📚 BookSwap
 
-**Swap physical books with readers near you.** List the books you've finished (with a photo of *your* copy), keep a
+**Swap physical books with readers near you.** List the books you've finished (with a photo of _your_ copy), keep a
 wishlist, get notified of **mutual matches**, send a swap request, chat in real time, agree on a safe public meeting
 spot on a map, and confirm the exchange. Before you commit, ask Google Gemini what the book is like with
 **Know Before You Swap**.
@@ -31,21 +31,21 @@ spot on a map, and confirm the exchange. Before you commit, ask Google Gemini wh
 
 ## Features
 
-| Area | What you get |
-| --- | --- |
-| **Accounts** | Email/password sign-up & login, Google OAuth, logout, protected routes (middleware + server checks + RLS) |
-| **Profile** | Name, bio, city, avatar upload, *approximate* location picked on a map (stored at ~1 km precision, never shown) |
-| **Listings** | Google Books autocomplete (title/author/ISBN) fills the form; everything stays editable; **photo of the physical copy** via file picker, drag & drop or phone camera, with preview, replace, remove and real upload progress; soft-delete (hide) and re-list |
-| **Discover** | Search (title/author/genre), filters (genre, condition, distance, availability), sorting, pagination; cards show photo, condition, owner, distance, wishlist ♥, AI insights, swap request and a mutual-match ribbon |
-| **Wishlist** | Add/remove/search; normalised de-duplication; drives matching |
-| **Mutual matches** | Computed inside Postgres with indexed joins; both users are notified the moment a match appears |
-| **Swaps** | Request → accept/reject/cancel → both confirm → completed. Accepting **atomically reserves both books** with row locks |
-| **Swap workspace** | Realtime chat (Supabase Realtime) + Leaflet meeting map side-by-side on desktop, tabbed on mobile |
-| **Meetings** | Drop a pin, name the place, propose a time; the other participant accepts/declines; public-place safety guidance |
-| **Notifications** | Bell with live unread count + dropdown, full page, mark one / all as read — for requests, accepts, rejections, matches, messages, meetings and completions |
-| **AI — Know Before You Swap** | Server-side Gemini: 3-bullet summary, tone & vibes, audience, similar reads, streaming Q&A with quick prompts, explicit confidence level, rate-limited per user |
-| **Moderation** | Report books/users; `/admin` (role-gated on the server and in Postgres) to review, hide/restore books, review users, resolve/dismiss reports |
-| **Polish** | Warm editorial design (amber, terracotta, cream, slate, forest), Framer Motion with `prefers-reduced-motion`, dark mode tokens, accessible forms/dialogs, empty/loading/error states everywhere |
+| Area                          | What you get                                                                                                                                                                                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Accounts**                  | Email/password sign-up & login, Google OAuth, logout, protected routes (middleware + server checks + RLS)                                                                                                                                                    |
+| **Profile**                   | Name, bio, city, avatar upload, _approximate_ location picked on a map (stored at ~1 km precision, never shown)                                                                                                                                              |
+| **Listings**                  | Google Books autocomplete (title/author/ISBN) fills the form; everything stays editable; **photo of the physical copy** via file picker, drag & drop or phone camera, with preview, replace, remove and real upload progress; soft-delete (hide) and re-list |
+| **Discover**                  | Search (title/author/genre), filters (genre, condition, distance, availability), sorting, pagination; cards show photo, condition, owner, distance, wishlist ♥, AI insights, swap request and a mutual-match ribbon                                          |
+| **Wishlist**                  | Add/remove/search; normalised de-duplication; drives matching                                                                                                                                                                                                |
+| **Mutual matches**            | Computed inside Postgres with indexed joins; both users are notified the moment a match appears                                                                                                                                                              |
+| **Swaps**                     | Request → accept/reject/cancel → both confirm → completed. Accepting **atomically reserves both books** with row locks                                                                                                                                       |
+| **Swap workspace**            | Realtime chat (Supabase Realtime) + Leaflet meeting map side-by-side on desktop, tabbed on mobile                                                                                                                                                            |
+| **Meetings**                  | Drop a pin, name the place, propose a time; the other participant accepts/declines; public-place safety guidance                                                                                                                                             |
+| **Notifications**             | Bell with live unread count + dropdown, full page, mark one / all as read — for requests, accepts, rejections, matches, messages, meetings and completions                                                                                                   |
+| **AI — Know Before You Swap** | Server-side Gemini: 3-bullet summary, tone & vibes, audience, similar reads, streaming Q&A with quick prompts, explicit confidence level, rate-limited per user                                                                                              |
+| **Moderation**                | Report books/users; `/admin` (role-gated on the server and in Postgres) to review, hide/restore books, review users, resolve/dismiss reports                                                                                                                 |
+| **Polish**                    | Warm editorial design (amber, terracotta, cream, slate, forest), Framer Motion with `prefers-reduced-motion`, dark mode tokens, accessible forms/dialogs, empty/loading/error states everywhere                                                              |
 
 ---
 
@@ -92,7 +92,7 @@ flowchart LR
 
 - **Server Components by default.** Client Components are only used for interactivity (forms, chat, map, sheets).
 - **Every query runs as the signed-in user** (anon key + their JWT), so Postgres Row Level Security is the final
-  authority. The service-role key is *not* used by the running app.
+  authority. The service-role key is _not_ used by the running app.
 - **Business rules live in the database** where they must be atomic: `create_swap_request`, `accept_swap_request`,
   `reject_swap_request`, `cancel_swap_request`, `complete_swap`, `respond_meeting_location`, matching triggers.
   The TypeScript mirrors in `lib/books/status.ts`, `lib/swaps/status.ts`, `lib/matching` exist for UI decisions and
@@ -106,15 +106,15 @@ flowchart LR
 
 All schema lives in versioned, idempotent migrations in [`supabase/migrations`](supabase/migrations):
 
-| Migration | Contents |
-| --- | --- |
-| `0100_foundation` | helpers (`set_updated_at`, `normalize_text`), `profiles`, `is_admin()`, auth → profile trigger, `public_profiles` view |
-| `0200_books_wishlists` | `books` (+ status-transition guard trigger), `wishlists`, trigram & matching indexes, RLS |
-| `0300_notifications` | `notifications`, internal `create_notification()` |
-| `0400_swaps` | `swap_requests`, `messages`, `meeting_locations`, workflow functions, RLS |
-| `0500_matching_discovery` | `matches`, matching functions/triggers, `get_my_matches()`, `discover_books()`, distance helpers |
-| `0600_moderation` | `reports`, admin functions |
-| `0700_storage_realtime_ai` | storage buckets & policies, realtime publication, `ai_usage` + `consume_ai_quota()` |
+| Migration                  | Contents                                                                                                               |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `0100_foundation`          | helpers (`set_updated_at`, `normalize_text`), `profiles`, `is_admin()`, auth → profile trigger, `public_profiles` view |
+| `0200_books_wishlists`     | `books` (+ status-transition guard trigger), `wishlists`, trigram & matching indexes, RLS                              |
+| `0300_notifications`       | `notifications`, internal `create_notification()`                                                                      |
+| `0400_swaps`               | `swap_requests`, `messages`, `meeting_locations`, workflow functions, RLS                                              |
+| `0500_matching_discovery`  | `matches`, matching functions/triggers, `get_my_matches()`, `discover_books()`, distance helpers                       |
+| `0600_moderation`          | `reports`, admin functions                                                                                             |
+| `0700_storage_realtime_ai` | storage buckets & policies, realtime publication, `ai_usage` + `consume_ai_quota()`                                    |
 
 ### ER diagram
 
@@ -244,8 +244,8 @@ wishes for.
    collapsed) into **generated, indexed columns** on both `books` and `wishlists`.
 2. A wishlist item matches a book when `title_norm` is equal and either the wishlist author is blank or
    `author_norm` is equal. (No fuzzy/substring matching — predictable, index-friendly.)
-3. `compute_mutual_matches(user)` runs two indexed joins — *"who wants my live books?"* and *"whose live books do I
-   want?"* — and intersects them on the other user. Nothing is ever loaded into JavaScript.
+3. `compute_mutual_matches(user)` runs two indexed joins — _"who wants my live books?"_ and _"whose live books do I
+   want?"_ — and intersects them on the other user. Nothing is ever loaded into JavaScript.
 4. Triggers on `books` (insert, title/author/status change) and `wishlists` (insert/delete) call
    `refresh_matches_for_user`, which upserts the canonical row (`user_a_id < user_b_id`, unique per book pair),
    removes matches that became invalid (item removed, book hidden/swapped/edited), and **notifies both users once**.
@@ -311,13 +311,13 @@ listing rather than resurrecting history.
 
 ## APIs & integrations
 
-| Integration | Where | Notes |
-| --- | --- | --- |
-| **Google Books** | `lib/google-books`, `GET /api/google-books?q=` | Server-side proxy (optional key stays server-only), ISBN detection, HTML-stripped descriptions, https thumbnails, 24 h fetch cache. Metadata only fills text fields and `google_cover_url` — never the owner's photo. |
-| **Gemini** | `lib/gemini`, `POST /api/gemini/insights`, `POST /api/gemini/ask` | REST client, key sent as a header from the server only. Insights use JSON mode + a response schema, validated with Zod, cached per title/author for 7 days. Q&A streams plain text via SSE → `ReadableStream`. System prompt forbids invented facts, requires a confidence level and treats user-written descriptions as untrusted. Per-user limit: 30 requests/hour (`consume_ai_quota`, advisory-locked). |
-| **Storage** | `POST/DELETE /api/books/:id/image`, `POST /api/profile/avatar` | Server validates extension + declared MIME + **magic bytes** + size (4 MB); images are downscaled to WebP in the browser first. Paths `book-covers/{user_id}/{book_id}/{uuid}.{ext}`; storage RLS pins writes to the owner's folder *and* to a book they own. Replaced/removed images are deleted. |
-| **Realtime** | `hooks/use-chat.ts`, `use-meetings.ts`, `use-notifications.ts`, `swap-live-refresh.tsx` | `postgres_changes` subscriptions; Realtime applies each table's RLS per subscriber, so users only receive their own swap's messages and their own notifications. |
-| **Maps** | `components/map/*` | Leaflet + OpenStreetMap tiles, loaded client-side only (`next/dynamic`, `ssr: false`), custom SVG markers. |
+| Integration      | Where                                                                                   | Notes                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ---------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Google Books** | `lib/google-books`, `GET /api/google-books?q=`                                          | Server-side proxy (optional key stays server-only), ISBN detection, HTML-stripped descriptions, https thumbnails, 24 h fetch cache. Metadata only fills text fields and `google_cover_url` — never the owner's photo.                                                                                                                                                                                       |
+| **Gemini**       | `lib/gemini`, `POST /api/gemini/insights`, `POST /api/gemini/ask`                       | REST client, key sent as a header from the server only. Insights use JSON mode + a response schema, validated with Zod, cached per title/author for 7 days. Q&A streams plain text via SSE → `ReadableStream`. System prompt forbids invented facts, requires a confidence level and treats user-written descriptions as untrusted. Per-user limit: 30 requests/hour (`consume_ai_quota`, advisory-locked). |
+| **Storage**      | `POST/DELETE /api/books/:id/image`, `POST /api/profile/avatar`                          | Server validates extension + declared MIME + **magic bytes** + size (4 MB); images are downscaled to WebP in the browser first. Paths `book-covers/{user_id}/{book_id}/{uuid}.{ext}`; storage RLS pins writes to the owner's folder _and_ to a book they own. Replaced/removed images are deleted.                                                                                                          |
+| **Realtime**     | `hooks/use-chat.ts`, `use-meetings.ts`, `use-notifications.ts`, `swap-live-refresh.tsx` | `postgres_changes` subscriptions; Realtime applies each table's RLS per subscriber, so users only receive their own swap's messages and their own notifications.                                                                                                                                                                                                                                            |
+| **Maps**         | `components/map/*`                                                                      | Leaflet + OpenStreetMap tiles, loaded client-side only (`next/dynamic`, `ssr: false`), custom SVG markers.                                                                                                                                                                                                                                                                                                  |
 
 ---
 
@@ -332,7 +332,7 @@ listing rather than resurrecting history.
 - [x] **Meeting coordinates** visible only to the two swap participants.
 - [x] **Chat** readable/writable only by participants of an active swap, as themselves (`sender_id = auth.uid()`).
 - [x] **Storage policies**: owner-folder + owned-book checks; public read only for listing images/avatars.
-- [x] **File validation on the server** (magic bytes, not MIME alone), size limits in the route *and* the bucket.
+- [x] **File validation on the server** (magic bytes, not MIME alone), size limits in the route _and_ the bucket.
 - [x] **Secrets**: `GEMINI_API_KEY`, `GOOGLE_BOOKS_API_KEY` and `SUPABASE_SERVICE_ROLE_KEY` are read only in
       `lib/env.server.ts` (`import "server-only"`); nothing secret uses the `NEXT_PUBLIC_` prefix. The app never uses
       the service-role key at runtime.
@@ -379,32 +379,32 @@ To make any user an admin: `update public.profiles set role = 'admin' where emai
 
 ## Environment variables
 
-| Variable | Public? | Required | Where to get it | Used in |
-| --- | --- | --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ public | yes | Supabase → Project Settings → API | all Supabase clients, `next.config.ts` image hosts |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ public (RLS-protected) | yes | Supabase → Project Settings → API | all Supabase clients |
-| `NEXT_PUBLIC_SITE_URL` | ✅ public | recommended in prod | your domain, e.g. `https://bookswap.vercel.app` | auth redirect URLs, metadata |
-| `GEMINI_API_KEY` | 🔒 server-only | for AI features | [Google AI Studio](https://aistudio.google.com/apikey) | `lib/gemini` |
-| `GEMINI_MODEL` | 🔒 server-only | no (default `gemini-2.5-flash`) | — | `lib/gemini` |
-| `GOOGLE_BOOKS_API_KEY` | 🔒 server-only | no (works keyless at low volume) | Google Cloud Console → Credentials (enable *Books API*) | `lib/google-books` |
-| `SUPABASE_SERVICE_ROLE_KEY` | 🔒 server-only, **bypasses RLS** | no — not used by the app | Supabase → Project Settings → API | reserved for maintenance/E2E setup only |
+| Variable                        | Public?                          | Required                         | Where to get it                                         | Used in                                            |
+| ------------------------------- | -------------------------------- | -------------------------------- | ------------------------------------------------------- | -------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | ✅ public                        | yes                              | Supabase → Project Settings → API                       | all Supabase clients, `next.config.ts` image hosts |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ public (RLS-protected)        | yes                              | Supabase → Project Settings → API                       | all Supabase clients                               |
+| `NEXT_PUBLIC_SITE_URL`          | ✅ public                        | recommended in prod              | your domain, e.g. `https://bookswap.vercel.app`         | auth redirect URLs, metadata                       |
+| `GEMINI_API_KEY`                | 🔒 server-only                   | for AI features                  | [Google AI Studio](https://aistudio.google.com/apikey)  | `lib/gemini`                                       |
+| `GEMINI_MODEL`                  | 🔒 server-only                   | no (default `gemini-2.5-flash`)  | —                                                       | `lib/gemini`                                       |
+| `GOOGLE_BOOKS_API_KEY`          | 🔒 server-only                   | no (works keyless at low volume) | Google Cloud Console → Credentials (enable _Books API_) | `lib/google-books`                                 |
+| `SUPABASE_SERVICE_ROLE_KEY`     | 🔒 server-only, **bypasses RLS** | no — not used by the app         | Supabase → Project Settings → API                       | reserved for maintenance/E2E setup only            |
 
 `lib/env.ts` validates public variables; `lib/env.server.ts` validates server variables. A missing variable produces a
 `MissingEnvError` that names the variable (never its value) only when the feature that needs it is used — e.g. a
-missing Gemini key returns *"This feature isn't configured on the server yet"* from the AI endpoints while the rest
+missing Gemini key returns _"This feature isn't configured on the server yet"_ from the AI endpoints while the rest
 of the app keeps working.
 
 ---
 
 ## Testing
 
-| Command | What it runs |
-| --- | --- |
-| `npm run lint` | ESLint (next/core-web-vitals + typescript, `no-explicit-any` as error) |
-| `npm run typecheck` | `tsc --noEmit` in strict mode (`noUncheckedIndexedAccess` on) |
-| `npm test` | Vitest: unit tests (validation, matching, both state machines, utils, image sniffing, Google Books mapping, Gemini prompts) + React Testing Library component tests; Supabase integration suite when `SUPABASE_TEST_*` is set |
-| `npm run test:db` | Applies all migrations **twice** to a throw-away Postgres (with a small Supabase shim), seeds, then runs ~70 SQL assertions for RLS, storage policies, state machines, matching, swaps, chat/meeting authorisation, notifications, moderation, AI quota, plus a **real concurrent-accept race** between two sessions |
-| `npm run test:e2e` | Playwright: the complete two-user journey (register → list with photo → wishlist → match → request → accept → reserved → realtime chat → meeting → accept → complete → swapped → notifications), plus mobile smoke tests |
+| Command             | What it runs                                                                                                                                                                                                                                                                                                         |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run lint`      | ESLint (next/core-web-vitals + typescript, `no-explicit-any` as error)                                                                                                                                                                                                                                               |
+| `npm run typecheck` | `tsc --noEmit` in strict mode (`noUncheckedIndexedAccess` on)                                                                                                                                                                                                                                                        |
+| `npm test`          | Vitest: unit tests (validation, matching, both state machines, utils, image sniffing, Google Books mapping, Gemini prompts) + React Testing Library component tests; Supabase integration suite when `SUPABASE_TEST_*` is set                                                                                        |
+| `npm run test:db`   | Applies all migrations **twice** to a throw-away Postgres (with a small Supabase shim), seeds, then runs ~70 SQL assertions for RLS, storage policies, state machines, matching, swaps, chat/meeting authorisation, notifications, moderation, AI quota, plus a **real concurrent-accept race** between two sessions |
+| `npm run test:e2e`  | Playwright: the complete two-user journey (register → list with photo → wishlist → match → request → accept → reserved → realtime chat → meeting → accept → complete → swapped → notifications), plus mobile smoke tests                                                                                             |
 
 `test:db` needs `PGHOST/PGPORT/PGUSER` for a Postgres 15+ server where you can create databases (e.g.
 `docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres:16`). CI runs it automatically

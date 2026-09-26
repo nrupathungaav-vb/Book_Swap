@@ -9,7 +9,11 @@ export const bookSchema = z.object({
   condition: z.enum(BOOK_CONDITIONS, { message: "Choose the book's condition." }),
   description: optionalText(4000),
   googleBooksId: optionalText(64),
-  googleCoverUrl: httpsUrl.optional().nullable().or(z.literal("")).transform((v) => v || null),
+  googleCoverUrl: httpsUrl
+    .optional()
+    .nullable()
+    .or(z.literal(""))
+    .transform((v) => v || null),
   isbn: z
     .string()
     .trim()

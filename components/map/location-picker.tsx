@@ -55,13 +55,28 @@ export function LocationPicker({
           center={value ?? { lat: 20.59, lng: 78.96 }}
           zoom={value ? 11 : 4}
           focus={focus}
-          pins={value ? [{ id: "home", lat: value.lat, lng: value.lng, label: "Your approximate area", tone: "draft" }] : []}
-          onPick={(lat, lng) => onChange({ lat: Math.round(lat * 100) / 100, lng: Math.round(lng * 100) / 100 })}
+          pins={
+            value
+              ? [
+                  {
+                    id: "home",
+                    lat: value.lat,
+                    lng: value.lng,
+                    label: "Your approximate area",
+                    tone: "draft",
+                  },
+                ]
+              : []
+          }
+          onPick={(lat, lng) =>
+            onChange({ lat: Math.round(lat * 100) / 100, lng: Math.round(lng * 100) / 100 })
+          }
         />
       </div>
       <div className="flex flex-wrap gap-2">
         <Button type="button" variant="outline" size="sm" onClick={useMyLocation} disabled={locating}>
-          {locating ? <Loader2 className="animate-spin" aria-hidden /> : <Crosshair aria-hidden />} Use my current area
+          {locating ? <Loader2 className="animate-spin" aria-hidden /> : <Crosshair aria-hidden />} Use my
+          current area
         </Button>
         {value && (
           <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}>
@@ -69,10 +84,14 @@ export function LocationPicker({
           </Button>
         )}
       </div>
-      {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
-      <p className="text-xs text-muted-foreground">
-        Tap roughly where you are — a neighbourhood is plenty. It&apos;s stored to ~1 km precision and only ever shown to
-        others as a distance, never on a map.
+      {error && (
+        <p className="text-destructive text-sm" role="alert">
+          {error}
+        </p>
+      )}
+      <p className="text-muted-foreground text-xs">
+        Tap roughly where you are — a neighbourhood is plenty. It&apos;s stored to ~1 km precision and only
+        ever shown to others as a distance, never on a map.
       </p>
     </div>
   );

@@ -25,7 +25,7 @@ export function Pagination({
           <ChevronLeft aria-hidden /> Previous
         </Button>
       )}
-      <span className="px-2 text-sm text-muted-foreground" aria-current="page">
+      <span className="text-muted-foreground px-2 text-sm" aria-current="page">
         Page {page} of {totalPages}
       </span>
       {page < totalPages ? (

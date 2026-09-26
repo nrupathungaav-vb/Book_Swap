@@ -4,11 +4,20 @@ import { availableSwapActions, canTransitionSwap, isActiveSwap, swapRole } from 
 import { BOOK_STATUSES, SWAP_STATUSES } from "@/types/database";
 
 describe("book status transitions", () => {
-  const allowed = new Set(["Available>Reserved", "Reserved>Available", "Reserved>Swapped", "Available>Hidden", "Hidden>Available"]);
+  const allowed = new Set([
+    "Available>Reserved",
+    "Reserved>Available",
+    "Reserved>Swapped",
+    "Available>Hidden",
+    "Hidden>Available",
+  ]);
 
-  it.each(BOOK_STATUSES.flatMap((from) => BOOK_STATUSES.map((to) => [from, to] as const)))("%s → %s", (from, to) => {
-    expect(canTransitionBook(from, to)).toBe(allowed.has(`${from}>${to}`));
-  });
+  it.each(BOOK_STATUSES.flatMap((from) => BOOK_STATUSES.map((to) => [from, to] as const)))(
+    "%s → %s",
+    (from, to) => {
+      expect(canTransitionBook(from, to)).toBe(allowed.has(`${from}>${to}`));
+    },
+  );
 
   it("owners can only hide/unhide; reservations belong to the swap workflow", () => {
     expect(ownerCanSetStatus("Available", "Hidden")).toBe(true);
@@ -24,11 +33,20 @@ describe("book status transitions", () => {
 });
 
 describe("swap status transitions", () => {
-  const allowed = new Set(["Pending>Accepted", "Pending>Rejected", "Pending>Cancelled", "Accepted>Completed", "Accepted>Cancelled"]);
+  const allowed = new Set([
+    "Pending>Accepted",
+    "Pending>Rejected",
+    "Pending>Cancelled",
+    "Accepted>Completed",
+    "Accepted>Cancelled",
+  ]);
 
-  it.each(SWAP_STATUSES.flatMap((from) => SWAP_STATUSES.map((to) => [from, to] as const)))("%s → %s", (from, to) => {
-    expect(canTransitionSwap(from, to)).toBe(allowed.has(`${from}>${to}`));
-  });
+  it.each(SWAP_STATUSES.flatMap((from) => SWAP_STATUSES.map((to) => [from, to] as const)))(
+    "%s → %s",
+    (from, to) => {
+      expect(canTransitionSwap(from, to)).toBe(allowed.has(`${from}>${to}`));
+    },
+  );
 
   it("active = pending or accepted", () => {
     expect(SWAP_STATUSES.filter(isActiveSwap)).toEqual(["Pending", "Accepted"]);
@@ -67,7 +85,9 @@ describe("availableSwapActions", () => {
   });
 
   it("outsiders get nothing and closed swaps are read-only", () => {
-    expect(Object.values(availableSwapActions({ ...swap, status: "Accepted" }, "stranger")).some(Boolean)).toBe(false);
+    expect(
+      Object.values(availableSwapActions({ ...swap, status: "Accepted" }, "stranger")).some(Boolean),
+    ).toBe(false);
     const done = availableSwapActions({ ...swap, status: "Completed" }, "req");
     expect(done.canChat).toBe(false);
     expect(done.canCancel).toBe(false);

@@ -8,7 +8,10 @@ type PgLikeError = { code?: string; message?: string; details?: string | null; h
  * Workflow functions raise human-readable messages (errcodes 22023/42501/P0002/23505
  * with our own text); anything else is logged and replaced with a generic message.
  */
-export function friendlyDbError(error: PgLikeError | null | undefined, fallback = "Something went wrong. Please try again."): string {
+export function friendlyDbError(
+  error: PgLikeError | null | undefined,
+  fallback = "Something went wrong. Please try again.",
+): string {
   if (!error) return fallback;
   const code = error.code ?? "";
   const message = error.message ?? "";
@@ -18,7 +21,8 @@ export function friendlyDbError(error: PgLikeError | null | undefined, fallback 
   }
   if (code === "23505") {
     if (/wishlists_unique_item/.test(message)) return "That book is already on your wishlist.";
-    if (/reports_one_open_per_target/.test(message)) return "You've already reported this — our moderators are on it.";
+    if (/reports_one_open_per_target/.test(message))
+      return "You've already reported this — our moderators are on it.";
     return /already/i.test(message) ? message : "That already exists.";
   }
   if (code === "23514") {

@@ -10,20 +10,20 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.982 0.012 85);        /* cream paper */
-  --foreground: oklch(0.27 0.02 260);          /* slate ink */
+  --background: oklch(0.982 0.012 85); /* cream paper */
+  --foreground: oklch(0.27 0.02 260); /* slate ink */
   --card: oklch(0.995 0.006 85);
   --card-foreground: oklch(0.27 0.02 260);
   --popover: oklch(0.995 0.006 85);
   --popover-foreground: oklch(0.27 0.02 260);
 
-  --primary: oklch(0.56 0.14 42);              /* terracotta */
+  --primary: oklch(0.56 0.14 42); /* terracotta */
   --primary-foreground: oklch(0.985 0.01 85);
-  --secondary: oklch(0.94 0.03 80);            /* parchment */
+  --secondary: oklch(0.94 0.03 80); /* parchment */
   --secondary-foreground: oklch(0.3 0.03 50);
   --muted: oklch(0.95 0.015 80);
   --muted-foreground: oklch(0.47 0.02 260);
-  --accent: oklch(0.93 0.06 80);               /* amber wash */
+  --accent: oklch(0.93 0.06 80); /* amber wash */
   --accent-foreground: oklch(0.32 0.06 60);
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.985 0 0);
@@ -36,8 +36,10 @@
   --input: oklch(0.87 0.02 80);
   --ring: oklch(0.62 0.14 55);
 
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif:
+    "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .dark {
@@ -107,7 +109,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background font-sans text-foreground antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     font-feature-settings: "kern", "liga";
   }
   h1,
@@ -120,15 +122,18 @@
     text-wrap: pretty;
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-ring;
+    @apply outline-ring outline-2 outline-offset-2;
   }
 }
 
 @layer utilities {
   /* Subtle paper grain for editorial surfaces */
   .paper {
-    background-image:
-      radial-gradient(circle at 1px 1px, color-mix(in oklch, var(--foreground) 5%, transparent) 1px, transparent 0);
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklch, var(--foreground) 5%, transparent) 1px,
+      transparent 0
+    );
     background-size: 22px 22px;
   }
   .spine-shadow {

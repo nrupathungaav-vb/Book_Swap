@@ -23,7 +23,9 @@ type FormOutput = z.output<typeof profileSchema>;
 export function ProfileForm({ profile }: { profile: Profile }) {
   const router = useRouter();
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
-    profile.geo_lat != null && profile.geo_lng != null ? { lat: profile.geo_lat, lng: profile.geo_lng } : null,
+    profile.geo_lat != null && profile.geo_lng != null
+      ? { lat: profile.geo_lat, lng: profile.geo_lng }
+      : null,
   );
   const form = useForm<FormInput, unknown, FormOutput>({
     resolver: zodResolver(profileSchema),
@@ -52,10 +54,20 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       <FormField id="fullName" label="Name" required error={errors.fullName?.message}>
         <Input autoComplete="name" maxLength={80} {...form.register("fullName")} />
       </FormField>
-      <FormField id="bio" label="About you" description="What do you like to read? Shown on your listings." error={errors.bio?.message}>
+      <FormField
+        id="bio"
+        label="About you"
+        description="What do you like to read? Shown on your listings."
+        error={errors.bio?.message}
+      >
         <Textarea rows={3} maxLength={500} {...form.register("bio")} />
       </FormField>
-      <FormField id="locationCity" label="City or neighbourhood" description="Shown publicly next to your listings." error={errors.locationCity?.message}>
+      <FormField
+        id="locationCity"
+        label="City or neighbourhood"
+        description="Shown publicly next to your listings."
+        error={errors.locationCity?.message}
+      >
         <Input autoComplete="address-level2" maxLength={80} {...form.register("locationCity")} />
       </FormField>
       <div className="space-y-2">
@@ -68,7 +80,11 @@ export function ProfileForm({ profile }: { profile: Profile }) {
             form.setValue("geoLng", next?.lng ?? null, { shouldDirty: true });
           }}
         />
-        {errors.geoLat && <p className="text-xs text-destructive" role="alert">{errors.geoLat.message}</p>}
+        {errors.geoLat && (
+          <p className="text-destructive text-xs" role="alert">
+            {errors.geoLat.message}
+          </p>
+        )}
       </div>
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting && <Loader2 className="animate-spin" aria-hidden />} Save profile

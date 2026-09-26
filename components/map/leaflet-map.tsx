@@ -77,7 +77,13 @@ export default function LeafletMap({
   className?: string;
 }) {
   return (
-    <MapContainer center={[center.lat, center.lng]} zoom={zoom} scrollWheelZoom className={className} style={{ height: "100%", width: "100%" }}>
+    <MapContainer
+      center={[center.lat, center.lng]}
+      zoom={zoom}
+      scrollWheelZoom
+      className={className}
+      style={{ height: "100%", width: "100%" }}
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -86,7 +92,13 @@ export default function LeafletMap({
       <InvalidateOnResize />
       {focus && <Recenter lat={focus.lat} lng={focus.lng} zoom={14} />}
       {pins.map((pin) => (
-        <Marker key={pin.id} position={[pin.lat, pin.lng]} icon={pinIcon(pin.tone)} title={pin.label} alt={pin.label}>
+        <Marker
+          key={pin.id}
+          position={[pin.lat, pin.lng]}
+          icon={pinIcon(pin.tone)}
+          title={pin.label}
+          alt={pin.label}
+        >
           <Popup>{pin.label}</Popup>
         </Marker>
       ))}

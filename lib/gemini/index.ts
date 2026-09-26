@@ -21,7 +21,10 @@ import type { GeminiInsights } from "@/types";
 const API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
 export class GeminiError extends Error {
-  constructor(message: string, public readonly status = 502) {
+  constructor(
+    message: string,
+    public readonly status = 502,
+  ) {
     super(message);
     this.name = "GeminiError";
   }
@@ -40,7 +43,12 @@ const insightsSchema = z.object({
     .array(z.object({ title: z.string().max(200), author: z.string().max(200), why: z.string().max(300) }))
     .max(5),
   confidence: z.enum(["high", "medium", "low"]),
-  caveats: z.string().max(600).nullable().optional().transform((v) => v ?? null),
+  caveats: z
+    .string()
+    .max(600)
+    .nullable()
+    .optional()
+    .transform((v) => v ?? null),
 });
 
 interface GeminiPart {
@@ -70,10 +78,14 @@ async function callGemini(path: string, body: unknown, signal?: AbortSignal): Pr
   });
   if (!res.ok) {
     const status = res.status;
-    if (status === 429) throw new GeminiError("The AI service is busy right now. Please try again shortly.", 429);
+    if (status === 429)
+      throw new GeminiError("The AI service is busy right now. Please try again shortly.", 429);
     if (status === 400 || status === 403) {
       console.error("[gemini] request rejected", status, await res.text().catch(() => ""));
-      throw new GeminiError("The AI service rejected the request. Check the Gemini API key/model configuration.", 502);
+      throw new GeminiError(
+        "The AI service rejected the request. Check the Gemini API key/model configuration.",
+        502,
+      );
     }
     throw new GeminiError("The AI service is unavailable. Please try again.", 502);
   }
@@ -109,7 +121,11 @@ async function generateInsightsUncached(book: BookContext): Promise<GeminiInsigh
   if (!parsed.success) {
     throw new GeminiError("The AI returned an incomplete answer. Please retry.");
   }
-  return { ...parsed.data, summary: parsed.data.summary.slice(0, 3), similarReads: parsed.data.similarReads.slice(0, 3) };
+  return {
+    ...parsed.data,
+    summary: parsed.data.summary.slice(0, 3),
+    similarReads: parsed.data.similarReads.slice(0, 3),
+  };
 }
 
 /**

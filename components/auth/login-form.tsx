@@ -16,7 +16,10 @@ import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 export function LoginForm({ next }: { next: string }) {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
-  const form = useForm<LoginInput>({ resolver: zodResolver(loginSchema), defaultValues: { email: "", password: "" } });
+  const form = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
   const { errors, isSubmitting } = form.formState;
 
   const onSubmit = form.handleSubmit(async (values) => {

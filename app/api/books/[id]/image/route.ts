@@ -93,7 +93,11 @@ export async function DELETE(request: Request, { params }: Params) {
     if (!book) return jsonError("Book not found.", 404);
     if (book.status === "Swapped") return jsonError("Swapped books can't be changed.", 409);
 
-    const { error } = await supabase.from("books").update({ cover_image_url: null }).eq("id", book.id).eq("user_id", user.id);
+    const { error } = await supabase
+      .from("books")
+      .update({ cover_image_url: null })
+      .eq("id", book.id)
+      .eq("user_id", user.id);
     if (error) return jsonError("Couldn't remove the photo.", 500);
 
     const previous = storagePathFromPublicUrl(book.cover_image_url, BOOK_IMAGES_BUCKET);

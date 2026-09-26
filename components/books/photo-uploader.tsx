@@ -10,9 +10,7 @@ import { ACCEPT_ATTRIBUTE, checkImageMetadata } from "@/lib/images/validate";
 import { cn } from "@/lib/utils";
 
 export type PhotoValue =
-  | { kind: "none" }
-  | { kind: "existing"; url: string }
-  | { kind: "new"; file: File; previewUrl: string };
+  { kind: "none" } | { kind: "existing"; url: string } | { kind: "new"; file: File; previewUrl: string };
 
 /**
  * Photo of the physical book: file picker, drag & drop, mobile camera/gallery,
@@ -96,14 +94,33 @@ export function PhotoUploader({
 
       {previewUrl ? (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-          <div className="relative aspect-[3/4] w-40 overflow-hidden rounded-lg border bg-muted">
-            <Image src={previewUrl} alt="Preview of your book photo" fill sizes="160px" className="object-cover" unoptimized />
+          <div className="bg-muted relative aspect-[3/4] w-40 overflow-hidden rounded-lg border">
+            <Image
+              src={previewUrl}
+              alt="Preview of your book photo"
+              fill
+              sizes="160px"
+              className="object-cover"
+              unoptimized
+            />
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={() => fileInput.current?.click()} disabled={busy}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInput.current?.click()}
+              disabled={busy}
+            >
               <RefreshCw aria-hidden /> Replace
             </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={() => onChange({ kind: "none" })} disabled={busy}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => onChange({ kind: "none" })}
+              disabled={busy}
+            >
               <Trash2 aria-hidden /> Remove
             </Button>
           </div>
@@ -121,37 +138,54 @@ export function PhotoUploader({
             if (!busy) void accept(event.dataTransfer.files?.[0]);
           }}
           className={cn(
-            "flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed bg-card/60 px-6 py-8 text-center transition-colors",
+            "bg-card/60 flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 py-8 text-center transition-colors",
             dragging && "border-primary bg-primary/5",
           )}
         >
-          <UploadCloud className="size-8 text-primary" aria-hidden />
+          <UploadCloud className="text-primary size-8" aria-hidden />
           <div>
             <p className="font-medium">Add a photo of your actual copy</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               <span className="hidden sm:inline">Drag &amp; drop, or choose a file. </span>JPG, PNG or WebP.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={() => fileInput.current?.click()} disabled={busy}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInput.current?.click()}
+              disabled={busy}
+            >
               <ImagePlus aria-hidden /> Choose photo
             </Button>
-            <Button type="button" variant="outline" size="sm" className="sm:hidden" onClick={() => cameraInput.current?.click()} disabled={busy}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="sm:hidden"
+              onClick={() => cameraInput.current?.click()}
+              disabled={busy}
+            >
               <Camera aria-hidden /> Take photo
             </Button>
           </div>
         </div>
       )}
 
-      {processing && <p className="text-sm text-muted-foreground" role="status">Preparing image…</p>}
+      {processing && (
+        <p className="text-muted-foreground text-sm" role="status">
+          Preparing image…
+        </p>
+      )}
       {progress !== null && (
         <div className="space-y-1" role="status" aria-live="polite">
           <Progress value={progress} aria-label="Upload progress" />
-          <p className="text-xs text-muted-foreground">Uploading… {progress}%</p>
+          <p className="text-muted-foreground text-xs">Uploading… {progress}%</p>
         </div>
       )}
       {error && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-destructive text-sm">
           {error}
         </p>
       )}

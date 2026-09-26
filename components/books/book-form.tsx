@@ -39,13 +39,25 @@ export function BookForm({
   /** Present when editing. */
   book?: Pick<
     Book,
-    "id" | "title" | "author" | "genre" | "condition" | "description" | "google_books_id" | "google_cover_url" | "isbn" | "cover_image_url" | "status"
+    | "id"
+    | "title"
+    | "author"
+    | "genre"
+    | "condition"
+    | "description"
+    | "google_books_id"
+    | "google_cover_url"
+    | "isbn"
+    | "cover_image_url"
+    | "status"
   >;
   prefill?: { title?: string; author?: string };
 }) {
   const router = useRouter();
   const editing = Boolean(book);
-  const [photo, setPhoto] = useState<PhotoValue>(book?.cover_image_url ? { kind: "existing", url: book.cover_image_url } : { kind: "none" });
+  const [photo, setPhoto] = useState<PhotoValue>(
+    book?.cover_image_url ? { kind: "existing", url: book.cover_image_url } : { kind: "none" },
+  );
   const [progress, setProgress] = useState<number | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -104,7 +116,9 @@ export function BookForm({
       const upload = await uploadWithProgress(`/api/books/${bookId}/image`, photo.file, setProgress);
       setProgress(null);
       if (!upload.ok) {
-        toast.error(`${editing ? "Book updated" : "Book listed"}, but the photo didn't upload: ${upload.error}`);
+        toast.error(
+          `${editing ? "Book updated" : "Book listed"}, but the photo didn't upload: ${upload.error}`,
+        );
         router.push(`/books/${bookId}/edit`);
         router.refresh();
         return;
@@ -134,22 +148,31 @@ export function BookForm({
         <Card>
           <CardHeader>
             <CardTitle>1 · Book details</CardTitle>
-            <CardDescription>Search Google Books to autofill, then adjust anything that doesn&apos;t match your copy.</CardDescription>
+            <CardDescription>
+              Search Google Books to autofill, then adjust anything that doesn&apos;t match your copy.
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-5">
             <GoogleBooksSearch onSelect={applyGoogleBook} />
 
             {googleId && (
-              <div className="flex items-center gap-3 rounded-lg border bg-muted/50 p-3 text-sm">
+              <div className="bg-muted/50 flex items-center gap-3 rounded-lg border p-3 text-sm">
                 {googleCover ? (
                   <div className="relative h-14 w-10 shrink-0 overflow-hidden rounded">
                     <Image src={googleCover} alt="" fill sizes="40px" className="object-cover" />
                   </div>
                 ) : null}
-                <p className="flex-1 text-muted-foreground">
-                  Linked to Google Books. The publisher cover is only a fallback — your photo always takes priority.
+                <p className="text-muted-foreground flex-1">
+                  Linked to Google Books. The publisher cover is only a fallback — your photo always takes
+                  priority.
                 </p>
-                <Button type="button" variant="ghost" size="icon-sm" onClick={clearGoogle} aria-label="Unlink Google Books">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={clearGoogle}
+                  aria-label="Unlink Google Books"
+                >
                   <X aria-hidden />
                 </Button>
               </div>
@@ -169,7 +192,12 @@ export function BookForm({
                 <Input inputMode="numeric" maxLength={17} {...form.register("isbn")} />
               </FormField>
             </div>
-            <FormField id="description" label="Description" description="Mention anything specific to your copy: edition, notes, wear." error={errors.description?.message}>
+            <FormField
+              id="description"
+              label="Description"
+              description="Mention anything specific to your copy: edition, notes, wear."
+              error={errors.description?.message}
+            >
               <Textarea rows={5} maxLength={4000} {...form.register("description")} />
             </FormField>
           </CardContent>
@@ -198,18 +226,23 @@ export function BookForm({
                 {BOOK_CONDITIONS.map((condition) => (
                   <label
                     key={condition}
-                    className="flex cursor-pointer flex-col rounded-lg border p-3 transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring"
+                    className="has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:focus-visible]:ring-ring flex cursor-pointer flex-col rounded-lg border p-3 transition-colors has-[:focus-visible]:ring-2"
                   >
                     <span className="flex items-center gap-2 font-medium">
-                      <input type="radio" value={condition} className="accent-[var(--primary)]" {...form.register("condition")} />
+                      <input
+                        type="radio"
+                        value={condition}
+                        className="accent-[var(--primary)]"
+                        {...form.register("condition")}
+                      />
                       {condition}
                     </span>
-                    <span className="mt-1 text-xs text-muted-foreground">{CONDITION_HELP[condition]}</span>
+                    <span className="text-muted-foreground mt-1 text-xs">{CONDITION_HELP[condition]}</span>
                   </label>
                 ))}
               </div>
               {errors.condition && (
-                <p role="alert" className="mt-2 text-xs text-destructive">
+                <p role="alert" className="text-destructive mt-2 text-xs">
                   {errors.condition.message}
                 </p>
               )}

@@ -71,7 +71,8 @@ export function MeetingPanel({
         label: `${m.location_name} (${m.agreed_status === "Accepted" ? "agreed" : "suggested"})`,
         tone: m.agreed_status === "Accepted" ? "agreed" : "suggested",
       }));
-    if (draft) list.push({ id: "draft", lat: draft.lat, lng: draft.lng, label: "Your new suggestion", tone: "draft" });
+    if (draft)
+      list.push({ id: "draft", lat: draft.lat, lng: draft.lng, label: "Your new suggestion", tone: "draft" });
     return list;
   }, [meetings, draft]);
 
@@ -111,10 +112,13 @@ export function MeetingPanel({
     });
 
   return (
-    <section aria-labelledby="meeting-heading" className="flex h-full flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
+    <section
+      aria-labelledby="meeting-heading"
+      className="bg-card flex h-full flex-col overflow-hidden rounded-2xl border shadow-sm"
+    >
       <header className="border-b px-4 py-3">
         <h2 id="meeting-heading" className="flex items-center gap-2 font-sans text-sm font-semibold">
-          <MapPinned className="size-4 text-primary" aria-hidden /> Meeting spot
+          <MapPinned className="text-primary size-4" aria-hidden /> Meeting spot
         </h2>
         {agreed ? (
           <p className="mt-1 text-sm">
@@ -122,39 +126,68 @@ export function MeetingPanel({
               <Check aria-hidden /> Agreed
             </Badge>
             <span className="font-medium">{agreed.location_name}</span>
-            {agreed.suggested_time && <span className="text-muted-foreground"> · {formatDateTime(agreed.suggested_time)}</span>}
+            {agreed.suggested_time && (
+              <span className="text-muted-foreground"> · {formatDateTime(agreed.suggested_time)}</span>
+            )}
           </p>
         ) : (
-          <p className="mt-1 text-xs text-muted-foreground">
-            {canArrange ? "Tap the map to drop a pin, then name the place." : "Meeting spots can be arranged once the swap is accepted."}
+          <p className="text-muted-foreground mt-1 text-xs">
+            {canArrange
+              ? "Tap the map to drop a pin, then name the place."
+              : "Meeting spots can be arranged once the swap is accepted."}
           </p>
         )}
       </header>
 
       <div className="relative h-72 shrink-0 md:h-80">
-        <LeafletMap center={center} zoom={zoom} pins={pins} onPick={canArrange ? onPick : undefined} focus={focus} />
+        <LeafletMap
+          center={center}
+          zoom={zoom}
+          pins={pins}
+          onPick={canArrange ? onPick : undefined}
+          focus={focus}
+        />
       </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto p-4">
         <Alert variant="info">
           <Info aria-hidden />
           <AlertDescription>
-            Pick a busy public place — a library, café, mall or station — and meet in daylight. Never share your home address.
+            Pick a busy public place — a library, café, mall or station — and meet in daylight. Never share
+            your home address.
           </AlertDescription>
         </Alert>
 
         {canArrange && draft && (
-          <form onSubmit={onSubmit} className="space-y-3 rounded-xl border bg-secondary/40 p-3" noValidate>
+          <form onSubmit={onSubmit} className="bg-secondary/40 space-y-3 rounded-xl border p-3" noValidate>
             <p className="text-sm font-medium">Suggest this spot</p>
-            <FormField id="meeting-name" label="Place name" required error={form.formState.errors.locationName?.message}>
-              <Input maxLength={120} placeholder="e.g. Central Library, main entrance" {...form.register("locationName")} />
+            <FormField
+              id="meeting-name"
+              label="Place name"
+              required
+              error={form.formState.errors.locationName?.message}
+            >
+              <Input
+                maxLength={120}
+                placeholder="e.g. Central Library, main entrance"
+                {...form.register("locationName")}
+              />
             </FormField>
-            <FormField id="meeting-time" label="Proposed time" error={form.formState.errors.suggestedTime?.message}>
-              <Input type="datetime-local" min={toLocalInputValue(new Date())} {...form.register("suggestedTime")} />
+            <FormField
+              id="meeting-time"
+              label="Proposed time"
+              error={form.formState.errors.suggestedTime?.message}
+            >
+              <Input
+                type="datetime-local"
+                min={toLocalInputValue(new Date())}
+                {...form.register("suggestedTime")}
+              />
             </FormField>
             <div className="flex gap-2">
               <Button type="submit" size="sm" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting && <Loader2 className="animate-spin" aria-hidden />} Suggest to {otherName}
+                {form.formState.isSubmitting && <Loader2 className="animate-spin" aria-hidden />} Suggest to{" "}
+                {otherName}
               </Button>
               <Button type="button" size="sm" variant="ghost" onClick={() => setDraft(null)}>
                 Discard pin
@@ -164,7 +197,7 @@ export function MeetingPanel({
         )}
 
         {meetings.length === 0 ? (
-          <p className="text-center text-sm text-muted-foreground">No meeting spots suggested yet.</p>
+          <p className="text-muted-foreground text-center text-sm">No meeting spots suggested yet.</p>
         ) : (
           <ul className="space-y-2" aria-label="Meeting suggestions">
             {meetings.map((meeting) => {
@@ -179,7 +212,7 @@ export function MeetingPanel({
                   )}
                 >
                   <div className="flex items-start gap-2">
-                    <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+                    <MapPin className="text-primary mt-0.5 size-4 shrink-0" aria-hidden />
                     <div className="min-w-0 flex-1">
                       <button
                         type="button"
@@ -188,25 +221,45 @@ export function MeetingPanel({
                       >
                         {meeting.location_name}
                       </button>
-                      <p className="text-xs text-muted-foreground">
-                        {mine ? "You suggested" : `${otherName} suggested`} · {formatRelativeTime(meeting.created_at)}
+                      <p className="text-muted-foreground text-xs">
+                        {mine ? "You suggested" : `${otherName} suggested`} ·{" "}
+                        {formatRelativeTime(meeting.created_at)}
                       </p>
                       {meeting.suggested_time && (
                         <p className="mt-1 flex items-center gap-1 text-xs">
-                          <CalendarClock className="size-3.5" aria-hidden /> {formatDateTime(meeting.suggested_time)}
+                          <CalendarClock className="size-3.5" aria-hidden />{" "}
+                          {formatDateTime(meeting.suggested_time)}
                         </p>
                       )}
                     </div>
-                    <Badge variant={meeting.agreed_status === "Accepted" ? "forest" : meeting.agreed_status === "Rejected" ? "muted" : "amber"}>
+                    <Badge
+                      variant={
+                        meeting.agreed_status === "Accepted"
+                          ? "forest"
+                          : meeting.agreed_status === "Rejected"
+                            ? "muted"
+                            : "amber"
+                      }
+                    >
                       {meeting.agreed_status}
                     </Badge>
                   </div>
                   {canArrange && !mine && meeting.agreed_status === "Suggested" && (
                     <div className="mt-2 flex gap-2">
-                      <Button size="sm" variant="forest" disabled={responding} onClick={() => respond(meeting, true)}>
+                      <Button
+                        size="sm"
+                        variant="forest"
+                        disabled={responding}
+                        onClick={() => respond(meeting, true)}
+                      >
                         <Check aria-hidden /> Accept
                       </Button>
-                      <Button size="sm" variant="outline" disabled={responding} onClick={() => respond(meeting, false)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={responding}
+                        onClick={() => respond(meeting, false)}
+                      >
                         <X aria-hidden /> Decline
                       </Button>
                     </div>

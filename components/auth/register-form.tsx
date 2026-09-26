@@ -44,7 +44,8 @@ export function RegisterForm() {
         <MailCheck aria-hidden />
         <AlertTitle>Check your inbox</AlertTitle>
         <AlertDescription>
-          We sent a confirmation link to <strong>{checkEmail}</strong>. Open it on this device to finish creating your account.
+          We sent a confirmation link to <strong>{checkEmail}</strong>. Open it on this device to finish
+          creating your account.
         </AlertDescription>
       </Alert>
     );
@@ -64,7 +65,12 @@ export function RegisterForm() {
       <FormField id="email" label="Email" error={errors.email?.message}>
         <Input type="email" autoComplete="email" inputMode="email" {...form.register("email")} />
       </FormField>
-      <FormField id="password" label="Password" description="At least 8 characters, with a letter and a number." error={errors.password?.message}>
+      <FormField
+        id="password"
+        label="Password"
+        description="At least 8 characters, with a letter and a number."
+        error={errors.password?.message}
+      >
         <PasswordInput autoComplete="new-password" {...form.register("password")} />
       </FormField>
       <FormField id="confirmPassword" label="Confirm password" error={errors.confirmPassword?.message}>

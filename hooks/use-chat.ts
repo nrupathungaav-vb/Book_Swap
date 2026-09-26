@@ -46,7 +46,8 @@ export function useChat(swapId: string, userId: string, initialMessages: Message
       )
       .subscribe((status) => {
         if (status === "SUBSCRIBED") setConnection("live");
-        else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") setConnection("offline");
+        else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED")
+          setConnection("offline");
       });
 
     return () => {
@@ -68,7 +69,9 @@ export function useChat(swapId: string, userId: string, initialMessages: Message
       upsert(optimistic);
       const result = await sendMessage(swapId, text);
       if (!result.ok) {
-        setMessages((current) => current.map((m) => (m.id === tempId ? { ...m, pending: false, failed: true } : m)));
+        setMessages((current) =>
+          current.map((m) => (m.id === tempId ? { ...m, pending: false, failed: true } : m)),
+        );
         return result.error;
       }
       seen.current.add(result.data.id);
@@ -78,7 +81,10 @@ export function useChat(swapId: string, userId: string, initialMessages: Message
     [swapId, userId, upsert],
   );
 
-  const discard = useCallback((id: string) => setMessages((current) => current.filter((m) => m.id !== id)), []);
+  const discard = useCallback(
+    (id: string) => setMessages((current) => current.filter((m) => m.id !== id)),
+    [],
+  );
 
   return { messages, connection, send, discard };
 }

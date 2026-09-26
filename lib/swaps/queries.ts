@@ -3,7 +3,10 @@ import type { TypedSupabaseClient } from "@/lib/supabase/server";
 import type { Book, PublicProfile, SwapDetails, SwapRequest } from "@/types";
 
 /** Loads swaps (RLS: only the caller's own) with both books and participants. */
-export async function loadSwapDetails(supabase: TypedSupabaseClient, swaps: SwapRequest[]): Promise<SwapDetails[]> {
+export async function loadSwapDetails(
+  supabase: TypedSupabaseClient,
+  swaps: SwapRequest[],
+): Promise<SwapDetails[]> {
   if (swaps.length === 0) return [];
   const bookIds = [...new Set(swaps.flatMap((s) => [s.requested_book_id, s.offered_book_id]))];
   const userIds = [...new Set(swaps.flatMap((s) => [s.requester_id, s.responder_id]))];

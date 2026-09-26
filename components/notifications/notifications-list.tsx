@@ -15,13 +15,19 @@ export function NotificationsList({ initial }: { initial: Notification[] }) {
   const unread = items.filter((n) => !n.is_read).length;
 
   if (items.length === 0) {
-    return <EmptyState icon={Bell} title="No notifications yet" description="Swap requests, matches and messages will show up here." />;
+    return (
+      <EmptyState
+        icon={Bell}
+        title="No notifications yet"
+        description="Swap requests, matches and messages will show up here."
+      />
+    );
   }
 
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{unread} unread</p>
+        <p className="text-muted-foreground text-sm">{unread} unread</p>
         <Button
           variant="outline"
           size="sm"
@@ -40,14 +46,16 @@ export function NotificationsList({ initial }: { initial: Notification[] }) {
           <CheckCheck aria-hidden /> Mark all as read
         </Button>
       </div>
-      <ul className="divide-y rounded-2xl border bg-card p-1 shadow-sm">
+      <ul className="bg-card divide-y rounded-2xl border p-1 shadow-sm">
         {items.map((notification) => (
           <li key={notification.id} className="py-0.5">
             <NotificationItem
               notification={notification}
               onOpen={(n) => {
                 if (n.is_read) return;
-                setItems((current) => current.map((item) => (item.id === n.id ? { ...item, is_read: true } : item)));
+                setItems((current) =>
+                  current.map((item) => (item.id === n.id ? { ...item, is_read: true } : item)),
+                );
                 void markNotificationRead(n.id);
               }}
             />

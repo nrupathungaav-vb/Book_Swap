@@ -21,7 +21,10 @@ export function OwnerBookActions({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
-  const run = (fn: () => Promise<{ ok: boolean; error?: string; message?: string; data?: unknown }>, after?: (data: unknown) => void) =>
+  const run = (
+    fn: () => Promise<{ ok: boolean; error?: string; message?: string; data?: unknown }>,
+    after?: (data: unknown) => void,
+  ) =>
     startTransition(async () => {
       const result = await fn();
       if (!result.ok) {
@@ -43,12 +46,22 @@ export function OwnerBookActions({
         </Button>
       )}
       {status === "Available" && (
-        <Button variant="ghost" size="sm" disabled={pending} onClick={() => run(() => setBookHidden(bookId, true))}>
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={pending}
+          onClick={() => run(() => setBookHidden(bookId, true))}
+        >
           {pending ? <Loader2 className="animate-spin" aria-hidden /> : <EyeOff aria-hidden />} Hide
         </Button>
       )}
       {status === "Hidden" && !hiddenByAdmin && (
-        <Button variant="ghost" size="sm" disabled={pending} onClick={() => run(() => setBookHidden(bookId, false))}>
+        <Button
+          variant="ghost"
+          size="sm"
+          disabled={pending}
+          onClick={() => run(() => setBookHidden(bookId, false))}
+        >
           {pending ? <Loader2 className="animate-spin" aria-hidden /> : <Eye aria-hidden />} Publish
         </Button>
       )}
@@ -67,7 +80,8 @@ export function OwnerBookActions({
             )
           }
         >
-          {pending ? <Loader2 className="animate-spin" aria-hidden /> : <RotateCw aria-hidden />} List a copy again
+          {pending ? <Loader2 className="animate-spin" aria-hidden /> : <RotateCw aria-hidden />} List a copy
+          again
         </Button>
       )}
     </div>

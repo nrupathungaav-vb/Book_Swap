@@ -15,16 +15,28 @@ export default async function DashboardPage() {
   const [profile, supabase] = await Promise.all([getCurrentProfile(), createClient()]);
 
   const [books, wishlist, activeSwaps, pendingForMe, matches, unread, recent] = await Promise.all([
-    supabase.from("books").select("id", { count: "exact", head: true }).eq("user_id", user.id).in("status", ["Available", "Reserved"]),
+    supabase
+      .from("books")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .in("status", ["Available", "Reserved"]),
     supabase.from("wishlists").select("id", { count: "exact", head: true }).eq("user_id", user.id),
     supabase
       .from("swap_requests")
       .select("id", { count: "exact", head: true })
       .or(`requester_id.eq.${user.id},responder_id.eq.${user.id}`)
       .in("status", ["Pending", "Accepted"]),
-    supabase.from("swap_requests").select("id", { count: "exact", head: true }).eq("responder_id", user.id).eq("status", "Pending"),
+    supabase
+      .from("swap_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("responder_id", user.id)
+      .eq("status", "Pending"),
     supabase.from("matches").select("id", { count: "exact", head: true }),
-    supabase.from("notifications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("is_read", false),
+    supabase
+      .from("notifications")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("is_read", false),
     supabase.rpc("discover_books", { p_limit: 4, p_sort: "newest" }),
   ]);
 
@@ -39,11 +51,11 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-10">
-      <FadeIn className="flex flex-col gap-4 rounded-2xl border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <FadeIn className="bg-card flex flex-col gap-4 rounded-2xl border p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">Your reading room</p>
+          <p className="text-primary text-xs font-semibold tracking-[0.18em] uppercase">Your reading room</p>
           <h1 className="mt-1 text-3xl font-semibold sm:text-4xl">Hello, {firstName}.</h1>
-          <p className="mt-1 text-muted-foreground">
+          <p className="text-muted-foreground mt-1">
             {(pendingForMe.count ?? 0) > 0
               ? `You have ${pendingForMe.count} swap request${pendingForMe.count === 1 ? "" : "s"} waiting for a reply.`
               : "Here's what's happening on your shelf."}
@@ -87,11 +99,11 @@ export default async function DashboardPage() {
             <StaggerItem key={stat.label}>
               <Link
                 href={stat.href}
-                className="flex h-full flex-col gap-2 rounded-xl border bg-card p-4 shadow-sm transition-colors hover:border-primary/40 hover:bg-accent/40"
+                className="bg-card hover:border-primary/40 hover:bg-accent/40 flex h-full flex-col gap-2 rounded-xl border p-4 shadow-sm transition-colors"
               >
-                <stat.icon className="size-5 text-primary" aria-hidden />
+                <stat.icon className="text-primary size-5" aria-hidden />
                 <span className="font-serif text-3xl font-semibold">{stat.value}</span>
-                <span className="text-sm text-muted-foreground">{stat.label}</span>
+                <span className="text-muted-foreground text-sm">{stat.label}</span>
               </Link>
             </StaggerItem>
           ))}
@@ -103,14 +115,33 @@ export default async function DashboardPage() {
           Quick actions
         </h2>
         {[
-          { href: "/wishlist", title: "Tell us what you want", text: "Add titles to your wishlist to unlock mutual matches.", icon: Heart },
-          { href: "/matches", title: "Check your matches", text: "See readers who want your books and have one you want.", icon: Sparkles },
-          { href: "/swaps", title: "Manage swaps", text: "Reply to requests, chat and confirm exchanges.", icon: ArrowLeftRight },
+          {
+            href: "/wishlist",
+            title: "Tell us what you want",
+            text: "Add titles to your wishlist to unlock mutual matches.",
+            icon: Heart,
+          },
+          {
+            href: "/matches",
+            title: "Check your matches",
+            text: "See readers who want your books and have one you want.",
+            icon: Sparkles,
+          },
+          {
+            href: "/swaps",
+            title: "Manage swaps",
+            text: "Reply to requests, chat and confirm exchanges.",
+            icon: ArrowLeftRight,
+          },
         ].map((action) => (
-          <Link key={action.href} href={action.href} className="group rounded-xl border bg-secondary/40 p-5 transition-colors hover:bg-secondary">
-            <action.icon className="size-5 text-forest" aria-hidden />
+          <Link
+            key={action.href}
+            href={action.href}
+            className="group bg-secondary/40 hover:bg-secondary rounded-xl border p-5 transition-colors"
+          >
+            <action.icon className="text-forest size-5" aria-hidden />
             <p className="mt-2 font-serif text-lg font-semibold group-hover:underline">{action.title}</p>
-            <p className="text-sm text-muted-foreground">{action.text}</p>
+            <p className="text-muted-foreground text-sm">{action.text}</p>
           </Link>
         ))}
       </section>
@@ -125,9 +156,11 @@ export default async function DashboardPage() {
           </Button>
         </div>
         {recent.error ? (
-          <p className="text-sm text-destructive">Unable to load recent books.</p>
+          <p className="text-destructive text-sm">Unable to load recent books.</p>
         ) : (recent.data ?? []).length === 0 ? (
-          <p className="rounded-xl border border-dashed p-8 text-center text-muted-foreground">No books from other readers yet.</p>
+          <p className="text-muted-foreground rounded-xl border border-dashed p-8 text-center">
+            No books from other readers yet.
+          </p>
         ) : (
           <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {(recent.data ?? []).map((book) => (

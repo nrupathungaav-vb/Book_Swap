@@ -18,19 +18,37 @@ export function DiscoverFilters({
   hasLocation: boolean;
 }) {
   return (
-    <form method="get" action="/discover" className="space-y-3 rounded-xl border bg-card p-4 shadow-sm" role="search">
+    <form
+      method="get"
+      action="/discover"
+      className="bg-card space-y-3 rounded-xl border p-4 shadow-sm"
+      role="search"
+    >
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Label htmlFor="q" className="sr-only">
             Search by title, author or genre
           </Label>
-          <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-          <Input id="q" name="q" type="search" defaultValue={params.q ?? ""} placeholder="Title, author or genre…" className="pl-9" />
+          <Search
+            className="text-muted-foreground pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2"
+            aria-hidden
+          />
+          <Input
+            id="q"
+            name="q"
+            type="search"
+            defaultValue={params.q ?? ""}
+            placeholder="Title, author or genre…"
+            className="pl-9"
+          />
         </div>
         <Button type="submit">Search</Button>
       </div>
-      <details className="group" open={Boolean(params.genre || params.condition || params.distance || params.status || params.sort)}>
-        <summary className="flex w-fit cursor-pointer list-none items-center gap-1.5 rounded-md text-sm font-medium text-muted-foreground hover:text-foreground">
+      <details
+        className="group"
+        open={Boolean(params.genre || params.condition || params.distance || params.status || params.sort)}
+      >
+        <summary className="text-muted-foreground hover:text-foreground flex w-fit cursor-pointer list-none items-center gap-1.5 rounded-md text-sm font-medium">
           <SlidersHorizontal className="size-4" aria-hidden /> Filters &amp; sorting
         </summary>
         <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-5">
@@ -58,7 +76,12 @@ export function DiscoverFilters({
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="distance">Distance</Label>
-            <NativeSelect id="distance" name="distance" defaultValue={params.distance?.toString() ?? ""} disabled={!hasLocation}>
+            <NativeSelect
+              id="distance"
+              name="distance"
+              defaultValue={params.distance?.toString() ?? ""}
+              disabled={!hasLocation}
+            >
               <option value="">Any distance</option>
               {[2, 5, 10, 25, 50].map((km) => (
                 <option key={km} value={km}>
@@ -88,7 +111,7 @@ export function DiscoverFilters({
           </div>
         </div>
         {!hasLocation && (
-          <p className="mt-2 text-xs text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-xs">
             <Link href="/profile" className="underline">
               Set your approximate location
             </Link>{" "}

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { checkImageMetadata, MAX_IMAGE_BYTES, sniffImageType, validateImageBytes } from "@/lib/images/validate";
+import {
+  checkImageMetadata,
+  MAX_IMAGE_BYTES,
+  sniffImageType,
+  validateImageBytes,
+} from "@/lib/images/validate";
 
 const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 0, 0, 0, 0, 0, 0, 0]);
 const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]);
@@ -22,13 +27,18 @@ describe("checkImageMetadata", () => {
     expect(checkImageMetadata({ name: "a.gif", type: "image/gif", size: 10 }).ok).toBe(false);
     expect(checkImageMetadata({ name: "a.png", type: "application/pdf", size: 10 }).ok).toBe(false);
     expect(checkImageMetadata({ name: "a.png", type: "image/png", size: 0 }).ok).toBe(false);
-    expect(checkImageMetadata({ name: "a.png", type: "image/png", size: MAX_IMAGE_BYTES + 1 }).ok).toBe(false);
+    expect(checkImageMetadata({ name: "a.png", type: "image/png", size: MAX_IMAGE_BYTES + 1 }).ok).toBe(
+      false,
+    );
   });
 });
 
 describe("validateImageBytes — never trust the MIME type alone", () => {
   it("accepts consistent files", () => {
-    expect(validateImageBytes({ name: "photo.webp", type: "image/webp", size: WEBP.length }, WEBP)).toEqual({ ok: true, type: "image/webp" });
+    expect(validateImageBytes({ name: "photo.webp", type: "image/webp", size: WEBP.length }, WEBP)).toEqual({
+      ok: true,
+      type: "image/webp",
+    });
   });
   it("rejects HTML renamed to .jpg with an image MIME type", () => {
     const result = validateImageBytes({ name: "evil.jpg", type: "image/jpeg", size: HTML.length }, HTML);

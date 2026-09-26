@@ -14,7 +14,9 @@ const enabled = Boolean(url && anonKey);
 type Client = SupabaseClient<Database>;
 
 async function newUser(label: string): Promise<{ client: Client; id: string }> {
-  const client = createClient<Database>(url!, anonKey!, { auth: { persistSession: false, autoRefreshToken: false } });
+  const client = createClient<Database>(url!, anonKey!, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
   const email = `${label}-${crypto.randomUUID().slice(0, 8)}@bookswap.test`;
   const { data, error } = await client.auth.signUp({
     email,
@@ -54,16 +56,26 @@ describe.skipIf(!enabled)("Supabase integration (real stack)", () => {
   });
 
   it("auth: a profile row is created for each new user", async () => {
-    const { data } = await alice.client.from("profiles").select("id, full_name, role").eq("id", alice.id).single();
+    const { data } = await alice.client
+      .from("profiles")
+      .select("id, full_name, role")
+      .eq("id", alice.id)
+      .single();
     expect(data).toMatchObject({ id: alice.id, full_name: "alice Tester", role: "user" });
   });
 
   it("books: owners can create; others cannot write", async () => {
     aliceBook = await addBook(alice.client, alice.id, titleA, "Author A");
     bobBook = await addBook(bob.client, bob.id, titleB, "Author B");
-    const { error } = await mallory.client.from("books").insert({ user_id: alice.id, title: "Fake", author: "X", condition: "Good" });
+    const { error } = await mallory.client
+      .from("books")
+      .insert({ user_id: alice.id, title: "Fake", author: "X", condition: "Good" });
     expect(error).not.toBeNull();
-    const { data } = await mallory.client.from("books").update({ title: "pwned" }).eq("id", aliceBook).select();
+    const { data } = await mallory.client
+      .from("books")
+      .update({ title: "pwned" })
+      .eq("id", aliceBook)
+      .select();
     expect(data).toEqual([]);
   });
 
@@ -74,29 +86,47 @@ describe.skipIf(!enabled)("Supabase integration (real stack)", () => {
     expect(aliceMatches?.some((m) => m.their_book_id === bobBook && m.my_book_id === aliceBook)).toBe(true);
     const { data: malloryMatches } = await mallory.client.rpc("get_my_matches");
     expect(malloryMatches).toEqual([]);
-    const { data: bobNotes } = await bob.client.from("notifications").select("type").eq("type", "mutual_match");
+    const { data: bobNotes } = await bob.client
+      .from("notifications")
+      .select("type")
+      .eq("type", "mutual_match");
     expect(bobNotes?.length).toBeGreaterThan(0);
   });
 
   it("image upload permissions: only into your own book folder", async () => {
     const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-    const own = await alice.client.storage.from("book-covers").upload(`${alice.id}/${aliceBook}/test.png`, png, { contentType: "image/png" });
+    const own = await alice.client.storage
+      .from("book-covers")
+      .upload(`${alice.id}/${aliceBook}/test.png`, png, { contentType: "image/png" });
     expect(own.error).toBeNull();
-    const foreign = await mallory.client.storage.from("book-covers").upload(`${alice.id}/${aliceBook}/evil.png`, png, { contentType: "image/png" });
+    const foreign = await mallory.client.storage
+      .from("book-covers")
+      .upload(`${alice.id}/${aliceBook}/evil.png`, png, { contentType: "image/png" });
     expect(foreign.error).not.toBeNull();
-    const del = await mallory.client.storage.from("book-covers").remove([`${alice.id}/${aliceBook}/test.png`]);
+    const del = await mallory.client.storage
+      .from("book-covers")
+      .remove([`${alice.id}/${aliceBook}/test.png`]);
     expect(del.data ?? []).toEqual([]);
   });
 
   let swapId: string;
 
   it("swap requests: validation, accept reserves both books atomically", async () => {
-    const own = await alice.client.rpc("create_swap_request", { p_requested_book_id: aliceBook, p_offered_book_id: aliceBook });
+    const own = await alice.client.rpc("create_swap_request", {
+      p_requested_book_id: aliceBook,
+      p_offered_book_id: aliceBook,
+    });
     expect(own.error).not.toBeNull();
-    const created = await alice.client.rpc("create_swap_request", { p_requested_book_id: bobBook, p_offered_book_id: aliceBook });
+    const created = await alice.client.rpc("create_swap_request", {
+      p_requested_book_id: bobBook,
+      p_offered_book_id: aliceBook,
+    });
     expect(created.error).toBeNull();
     swapId = created.data!;
-    const dup = await alice.client.rpc("create_swap_request", { p_requested_book_id: bobBook, p_offered_book_id: aliceBook });
+    const dup = await alice.client.rpc("create_swap_request", {
+      p_requested_book_id: bobBook,
+      p_offered_book_id: aliceBook,
+    });
     expect(dup.error?.message).toMatch(/already an active/);
     const wrongAccept = await alice.client.rpc("accept_swap_request", { p_swap_id: swapId });
     expect(wrongAccept.error).not.toBeNull();
@@ -107,9 +137,13 @@ describe.skipIf(!enabled)("Supabase integration (real stack)", () => {
   });
 
   it("chat authorisation: only participants read/write messages", async () => {
-    const sent = await alice.client.from("messages").insert({ swap_request_id: swapId, sender_id: alice.id, text: "hello" });
+    const sent = await alice.client
+      .from("messages")
+      .insert({ swap_request_id: swapId, sender_id: alice.id, text: "hello" });
     expect(sent.error).toBeNull();
-    const spoof = await mallory.client.from("messages").insert({ swap_request_id: swapId, sender_id: mallory.id, text: "hi" });
+    const spoof = await mallory.client
+      .from("messages")
+      .insert({ swap_request_id: swapId, sender_id: mallory.id, text: "hi" });
     expect(spoof.error).not.toBeNull();
     const { data: peek } = await mallory.client.from("messages").select("*").eq("swap_request_id", swapId);
     expect(peek).toEqual([]);
@@ -120,15 +154,27 @@ describe.skipIf(!enabled)("Supabase integration (real stack)", () => {
   it("meeting authorisation: participants only, the other side responds", async () => {
     const { data: meeting, error } = await bob.client
       .from("meeting_locations")
-      .insert({ swap_request_id: swapId, suggested_by_user_id: bob.id, lat: 12.97, lng: 77.59, location_name: "Central Library" })
+      .insert({
+        swap_request_id: swapId,
+        suggested_by_user_id: bob.id,
+        lat: 12.97,
+        lng: 77.59,
+        location_name: "Central Library",
+      })
       .select("*")
       .single();
     expect(error).toBeNull();
     const outsider = await mallory.client.from("meeting_locations").select("*").eq("swap_request_id", swapId);
     expect(outsider.data).toEqual([]);
-    const self = await bob.client.rpc("respond_meeting_location", { p_meeting_id: meeting!.id, p_accept: true });
+    const self = await bob.client.rpc("respond_meeting_location", {
+      p_meeting_id: meeting!.id,
+      p_accept: true,
+    });
     expect(self.error).not.toBeNull();
-    const ok = await alice.client.rpc("respond_meeting_location", { p_meeting_id: meeting!.id, p_accept: true });
+    const ok = await alice.client.rpc("respond_meeting_location", {
+      p_meeting_id: meeting!.id,
+      p_accept: true,
+    });
     expect(ok.data?.agreed_status).toBe("Accepted");
   });
 
@@ -137,13 +183,18 @@ describe.skipIf(!enabled)("Supabase integration (real stack)", () => {
     expect((await bob.client.rpc("complete_swap", { p_swap_id: swapId })).data?.status).toBe("Completed");
     const { data: books } = await alice.client.from("books").select("status").in("id", [aliceBook, bobBook]);
     expect(books?.every((b) => b.status === "Swapped")).toBe(true);
-    const { data: notes } = await alice.client.from("notifications").select("type").eq("related_swap_id", swapId);
+    const { data: notes } = await alice.client
+      .from("notifications")
+      .select("type")
+      .eq("related_swap_id", swapId);
     expect(notes?.map((n) => n.type)).toContain("swap_completed");
   });
 
   it("reports: users can report, only admins can act", async () => {
     const extra = await addBook(bob.client, bob.id, `Report Target ${tag}`, "Someone");
-    const report = await mallory.client.from("reports").insert({ reporter_id: mallory.id, reported_book_id: extra, reason: "Spam" });
+    const report = await mallory.client
+      .from("reports")
+      .insert({ reporter_id: mallory.id, reported_book_id: extra, reason: "Spam" });
     expect(report.error).toBeNull();
     const hide = await mallory.client.rpc("admin_set_book_visibility", { p_book_id: extra, p_hidden: true });
     expect(hide.error?.message).toMatch(/Admin access required/);

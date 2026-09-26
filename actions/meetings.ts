@@ -9,7 +9,11 @@ import type { ActionResult, MeetingLocation } from "@/types";
 export async function suggestMeeting(input: MeetingInput): Promise<ActionResult<MeetingLocation>> {
   const parsed = meetingSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const { user, supabase } = await requireUser();
@@ -26,7 +30,10 @@ export async function suggestMeeting(input: MeetingInput): Promise<ActionResult<
       .select("*")
       .single();
     if (error || !data) {
-      return { ok: false, error: friendlyDbError(error, "Couldn't suggest that spot. Is the swap still accepted?") };
+      return {
+        ok: false,
+        error: friendlyDbError(error, "Couldn't suggest that spot. Is the swap still accepted?"),
+      };
     }
     revalidatePath(`/swaps/${parsed.data.swapId}`);
     return { ok: true, data, message: "Meeting spot suggested." };
@@ -35,7 +42,10 @@ export async function suggestMeeting(input: MeetingInput): Promise<ActionResult<
   }
 }
 
-export async function respondToMeeting(meetingId: string, accept: boolean): Promise<ActionResult<MeetingLocation>> {
+export async function respondToMeeting(
+  meetingId: string,
+  accept: boolean,
+): Promise<ActionResult<MeetingLocation>> {
   const parsed = meetingResponseSchema.safeParse({ meetingId, accept });
   if (!parsed.success) return { ok: false, error: "Invalid request." };
   try {
@@ -44,7 +54,8 @@ export async function respondToMeeting(meetingId: string, accept: boolean): Prom
       p_meeting_id: parsed.data.meetingId,
       p_accept: parsed.data.accept,
     });
-    if (error || !data) return { ok: false, error: friendlyDbError(error, "Couldn't respond to that suggestion.") };
+    if (error || !data)
+      return { ok: false, error: friendlyDbError(error, "Couldn't respond to that suggestion.") };
     revalidatePath(`/swaps/${data.swap_request_id}`);
     return { ok: true, data, message: accept ? "Meeting spot agreed!" : "Suggestion declined." };
   } catch (error) {

@@ -27,7 +27,10 @@ interface VolumesResponse {
 }
 
 export class GoogleBooksError extends Error {
-  constructor(message: string, public readonly status?: number) {
+  constructor(
+    message: string,
+    public readonly status?: number,
+  ) {
     super(message);
     this.name = "GoogleBooksError";
   }
@@ -97,19 +100,19 @@ export async function searchGoogleBooks(query: string, maxResults = 8): Promise<
   });
   if (!res.ok) {
     throw new GoogleBooksError(
-      res.status === 429 ? "Google Books is rate-limiting requests. Try again in a minute." : "Google Books search failed.",
+      res.status === 429
+        ? "Google Books is rate-limiting requests. Try again in a minute."
+        : "Google Books search failed.",
       res.status,
     );
   }
   const json = (await res.json()) as VolumesResponse;
   const seen = new Set<string>();
-  return (json.items ?? [])
-    .map(mapVolume)
-    .filter((book): book is GoogleBook => {
-      if (!book || seen.has(book.googleBooksId)) return false;
-      seen.add(book.googleBooksId);
-      return true;
-    });
+  return (json.items ?? []).map(mapVolume).filter((book): book is GoogleBook => {
+    if (!book || seen.has(book.googleBooksId)) return false;
+    seen.add(book.googleBooksId);
+    return true;
+  });
 }
 
 export async function getGoogleBook(id: string): Promise<GoogleBook | null> {

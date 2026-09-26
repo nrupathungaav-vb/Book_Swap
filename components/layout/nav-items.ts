@@ -17,6 +17,7 @@ export const APP_NAV: NavItem[] = [
 ];
 
 export function isActive(pathname: string, href: string): boolean {
-  if (href === "/books") return pathname === "/books" || pathname.startsWith("/books/new") || pathname.endsWith("/edit");
+  if (href === "/books")
+    return pathname === "/books" || pathname.startsWith("/books/new") || pathname.endsWith("/edit");
   return pathname === href || pathname.startsWith(`${href}/`);
 }

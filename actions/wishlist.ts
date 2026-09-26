@@ -17,7 +17,11 @@ function revalidateWishlist() {
 export async function addWishlistItem(input: WishlistInput): Promise<ActionResult<Wishlist>> {
   const parsed = wishlistSchema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: "Please check the highlighted fields.", fieldErrors: parsed.error.flatten().fieldErrors };
+    return {
+      ok: false,
+      error: "Please check the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
   }
   try {
     const { user, supabase } = await requireUser();
@@ -76,14 +80,19 @@ export async function toggleWishlistForBook(bookId: string): Promise<ActionResul
       const { error } = await supabase
         .from("wishlists")
         .delete()
-        .in("id", matching.map((item) => item.id))
+        .in(
+          "id",
+          matching.map((item) => item.id),
+        )
         .eq("user_id", user.id);
       if (error) return { ok: false, error: friendlyDbError(error) };
       revalidateWishlist();
       return { ok: true, data: { inWishlist: false }, message: "Removed from your wishlist." };
     }
 
-    const { error } = await supabase.from("wishlists").insert({ user_id: user.id, title: book.title, author: book.author });
+    const { error } = await supabase
+      .from("wishlists")
+      .insert({ user_id: user.id, title: book.title, author: book.author });
     if (error) return { ok: false, error: friendlyDbError(error) };
     revalidateWishlist();
     return { ok: true, data: { inWishlist: true }, message: "Added to your wishlist." };

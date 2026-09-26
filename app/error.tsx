@@ -5,7 +5,13 @@ import Link from "next/link";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function ErrorPage({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function ErrorPage({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -21,7 +27,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
           ? "BookSwap isn't fully configured yet. Check the server environment variables (see .env.example)."
           : "Something unexpected happened. You can try again, or head back home."}
       </p>
-      {error.digest && <p className="text-xs text-muted-foreground">Reference: {error.digest}</p>}
+      {error.digest && <p className="text-muted-foreground text-xs">Reference: {error.digest}</p>}
       <div className="flex gap-2">
         <Button onClick={reset}>
           <RotateCcw aria-hidden /> Try again

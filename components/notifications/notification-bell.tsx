@@ -11,16 +11,24 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { useNotifications } from "@/hooks/use-notifications";
 
 export function NotificationBell({ userId, initialUnread }: { userId: string; initialUnread: number }) {
-  const { unread, items, error, loading, refresh, markRead, markAllRead } = useNotifications(userId, initialUnread);
+  const { unread, items, error, loading, refresh, markRead, markAllRead } = useNotifications(
+    userId,
+    initialUnread,
+  );
   const [pending, startTransition] = useTransition();
 
   return (
     <DropdownMenu onOpenChange={(open) => open && void refresh()}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative" aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`}
+        >
           <Bell aria-hidden />
           {unread > 0 && (
-            <span className="absolute top-1 right-1 flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] leading-4 font-semibold text-primary-foreground">
+            <span className="bg-primary text-primary-foreground absolute top-1 right-1 flex min-w-4 items-center justify-center rounded-full px-1 text-[10px] leading-4 font-semibold">
               {unread > 9 ? "9+" : unread}
             </span>
           )}
@@ -46,12 +54,14 @@ export function NotificationBell({ userId, initialUnread }: { userId: string; in
         </div>
         <div className="max-h-96 overflow-y-auto p-1" aria-live="polite" aria-busy={loading}>
           {loading && !items && (
-            <p className="flex items-center gap-2 p-4 text-sm text-muted-foreground">
+            <p className="text-muted-foreground flex items-center gap-2 p-4 text-sm">
               <Loader2 className="size-4 animate-spin" aria-hidden /> Loading…
             </p>
           )}
-          {error && <p className="p-4 text-sm text-destructive">{error}</p>}
-          {items && items.length === 0 && <p className="p-6 text-center text-sm text-muted-foreground">You&apos;re all caught up.</p>}
+          {error && <p className="text-destructive p-4 text-sm">{error}</p>}
+          {items && items.length === 0 && (
+            <p className="text-muted-foreground p-6 text-center text-sm">You&apos;re all caught up.</p>
+          )}
           {items?.map((notification) => (
             <NotificationItem
               key={notification.id}

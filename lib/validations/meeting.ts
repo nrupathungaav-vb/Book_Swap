@@ -5,7 +5,11 @@ export const meetingSchema = z.object({
   swapId: uuidSchema,
   lat: z.number().min(-90).max(90),
   lng: z.number().min(-180).max(180),
-  locationName: z.string().trim().min(2, { message: "Name the place (e.g. \"Central Library entrance\")." }).max(120),
+  locationName: z
+    .string()
+    .trim()
+    .min(2, { message: 'Name the place (e.g. "Central Library entrance").' })
+    .max(120),
   suggestedTime: z
     .string()
     .optional()
