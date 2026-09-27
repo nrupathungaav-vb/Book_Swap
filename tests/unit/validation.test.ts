@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { loginSchema, registerSchema } from "@/lib/validations/auth";
+import {
+  forgotPasswordSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from "@/lib/validations/auth";
 import { bookSchema } from "@/lib/validations/book";
 import { parseDiscoverParams } from "@/lib/validations/discover";
 import { meetingSchema } from "@/lib/validations/meeting";
@@ -31,6 +36,19 @@ describe("auth validation", () => {
     ).toBe(false);
     const mismatch = registerSchema.safeParse({ ...base, confirmPassword: "different1" });
     expect(mismatch.success).toBe(false);
+    expect(mismatch.error?.issues[0]?.path).toEqual(["confirmPassword"]);
+  });
+
+  it("validates forgot- and reset-password input", () => {
+    expect(forgotPasswordSchema.parse({ email: " Bob@Example.com" }).email).toBe("bob@example.com");
+    expect(forgotPasswordSchema.safeParse({ email: "" }).success).toBe(false);
+    expect(
+      resetPasswordSchema.safeParse({ password: "newpass12", confirmPassword: "newpass12" }).success,
+    ).toBe(true);
+    expect(resetPasswordSchema.safeParse({ password: "short1", confirmPassword: "short1" }).success).toBe(
+      false,
+    );
+    const mismatch = resetPasswordSchema.safeParse({ password: "newpass12", confirmPassword: "newpass13" });
     expect(mismatch.error?.issues[0]?.path).toEqual(["confirmPassword"]);
   });
 });

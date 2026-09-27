@@ -24,7 +24,7 @@ export function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 }
 
-export const AUTH_PAGES = ["/login", "/register"];
+export const AUTH_PAGES = ["/login", "/register", "/forgot-password"];
 
 /**
  * Refreshes the Supabase session cookie on every request and redirects
